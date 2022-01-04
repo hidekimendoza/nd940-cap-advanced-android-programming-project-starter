@@ -6,31 +6,39 @@ import android.location.Location
 import android.os.Bundle
 import android.view.*
 import android.view.inputmethod.InputMethodManager
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import com.example.android.politicalpreparedness.R
+import com.example.android.politicalpreparedness.databinding.FragmentRepresentativeBinding
 import com.example.android.politicalpreparedness.network.models.Address
 import java.util.Locale
 
-//class DetailFragment : Fragment() {
-//
-//    companion object {
-//        //TODO: Add Constant for Location request
-//    }
-//
-//    //TODO: Declare ViewModel
-//
-//    override fun onCreateView(inflater: LayoutInflater,
-//                              container: ViewGroup?,
-//                              savedInstanceState: Bundle?): View? {
-//
-//        //TODO: Establish bindings
-//
-//        //TODO: Define and assign Representative adapter
-//
-//        //TODO: Populate Representative adapter
-//
-//        //TODO: Establish button listeners for field and location search
-//
-//    }
+class DetailFragment : Fragment() {
+    private lateinit var binding: FragmentRepresentativeBinding
+
+    companion object {
+        //TODO: Add Constant for Location request
+    }
+
+    //TODO: Declare ViewModel
+
+    override fun onCreateView(inflater: LayoutInflater,
+                              container: ViewGroup?,
+                              savedInstanceState: Bundle?): View? {
+
+        //TODO: Establish bindings
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_representative, container, false)
+
+        return binding.root
+
+
+        //TODO: Define and assign Representative adapter
+
+        //TODO: Populate Representative adapter
+
+        //TODO: Establish button listeners for field and location search
+
+    }
 //
 //    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
 //        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
@@ -68,5 +76,5 @@ import java.util.Locale
 //        val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
 //        imm.hideSoftInputFromWindow(view!!.windowToken, 0)
 //    }
-//
-//}
+
+}
