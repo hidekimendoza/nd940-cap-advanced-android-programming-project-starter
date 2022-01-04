@@ -16,6 +16,9 @@ buildscript {
         version_glide = "4.11.0"
         version_play_services_location = "17.0.0"
         version_room = "2.2.5"
+
+        androidXTestVersion = "1.4.0"
+        espressoVersion = "3.4.0"
     }
 
     repositories {
