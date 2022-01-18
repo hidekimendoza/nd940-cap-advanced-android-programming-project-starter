@@ -33,8 +33,11 @@
                 android:text="@string/upcoming_elections" />
 
             <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/upcoming_element_rview"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                />
         </LinearLayout>
 
         <androidx.constraintlayout.widget.Guideline
@@ -65,8 +68,11 @@
                 android:text="@string/saved_elections" />
 
             <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/saved_element_rview"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                />
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
