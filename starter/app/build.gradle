@@ -135,6 +135,9 @@ dependencies {
     androidTestImplementation "junit:junit:$junitVersion"
     androidTestImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$version_kotlin_coroutines"
     androidTestImplementation "org.mockito:mockito-core:$mockitoVersion"
+    androidTestImplementation('com.adevinta.android:barista:4.2.0') {
+        exclude group: 'org.jetbrains.kotlin' // Only if you already use Kotlin in your project
+    }
     // androidTestImplementation "org.robolectric:annotations:$robolectricVersion"
     // Local test
     testImplementation "junit:junit:$junitVersion"
