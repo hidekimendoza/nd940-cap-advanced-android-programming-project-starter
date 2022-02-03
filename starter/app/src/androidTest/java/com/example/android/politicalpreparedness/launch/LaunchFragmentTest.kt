@@ -1,43 +1,72 @@
 package com.example.android.politicalpreparedness.launch
 
+import android.app.Application
 import android.os.Bundle
 import androidx.fragment.app.testing.launchFragmentInContainer
 import androidx.navigation.NavController
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
-import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.MediumTest
+import androidx.test.rule.ActivityTestRule
+import androidx.test.runner.AndroidJUnit4
+import com.example.android.politicalpreparedness.MainActivity
 import com.example.android.politicalpreparedness.R
+import com.udacity.project4.util.DataBindingIdlingResource
+import com.udacity.project4.util.monitorActivity
+import com.udacity.project4.util.monitorFragment
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.MatcherAssert.assertThat
+import org.junit.After
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.verify
 
-@MediumTest
 @RunWith(AndroidJUnit4::class)
+@ExperimentalCoroutinesApi
+@MediumTest
 class LaunchFragmentTest{
-//    @Test
-//    fun uiElements_onLaunch_shouldBeDisplayed(){
-//        val scenario = launchFragmentInContainer<LaunchFragment>(Bundle(), R.style.AppTheme)
-//        onView(withId(R.id.imageViewBallotLogo)).check(matches(isDisplayed()))
-//    }
-////
-////
-//    @Test
-//    fun electionButton_onClick_shouldNavigateToElectionFragment(){
-//        val navController = mock(NavController::class.java)
-//        val activityScenario = launchFragmentInContainer<LaunchFragment>(Bundle(), R.style.AppTheme)
-//        onView(withText(R.string.upcoming_elections)).perform(click())
-//        verify(navController).navigate(LaunchFragmentDirections.actionLaunchFragmentToElectionsFragment())
-////        assertThat(
-////            1,
-////            `is`(1)
-////        )
-//    }
+
+    private val dataBindingIdlingResource = DataBindingIdlingResource()
+
+    @Before
+    fun registerIdlingResource() {
+        // IdlingRegistry.getInstance().register(EspressoIdlingResource.countingIdlingResource)
+        IdlingRegistry.getInstance().register(dataBindingIdlingResource)
+    }
+
+    @After
+    fun unregisterIdlingResource() {
+        // IdlingRegistry.getInstance().unregister(EspressoIdlingResource.countingIdlingResource)
+        IdlingRegistry.getInstance().unregister(dataBindingIdlingResource)
+    }
+
+
+    @Test
+    fun uiElements_onLaunch_shouldBeDisplayed(){
+        val scenario = launchFragmentInContainer<LaunchFragment>(Bundle(), R.style.AppTheme)
+        dataBindingIdlingResource.monitorFragment(scenario)
+        onView(withId(R.id.imageViewBallotLogo)).check(matches(isDisplayed()))
+    }
+//
+//
+    @Test
+    fun electionButton_onClick_shouldNavigateToElectionFragment(){
+        val navController = mock(NavController::class.java)
+        val scenario = launchFragmentInContainer<LaunchFragment>(Bundle(), R.style.AppTheme)
+        dataBindingIdlingResource.monitorFragment(scenario)
+         onView(withText(R.string.upcoming_elections)).perform(click())
+        verify(navController).navigate(LaunchFragmentDirections.actionLaunchFragmentToElectionsFragment())
+        assertThat(
+            1,
+            `is`(1)
+        )
+    }
 
 }

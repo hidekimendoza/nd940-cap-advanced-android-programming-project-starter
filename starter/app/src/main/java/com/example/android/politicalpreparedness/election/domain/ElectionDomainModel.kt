@@ -15,11 +15,14 @@ data class ElectionDomainModel(
     val saved: Boolean
 ) : Parcelable
 
-fun ElectionDomainModel.toDataModel() =
-    Election(
-        id = id,
-        name = name,
-        electionDay = electionDay,
-        division = division,
-        saved = saved
-    )
+fun List<ElectionDomainModel>.toDataModel(): List<Election> {
+    return map {
+        Election(
+            id = it.id,
+            name = it.name,
+            electionDay = it.electionDay,
+            division = it.division,
+            saved = it.saved
+        )
+    }
+}

@@ -1,0 +1,29 @@
+{
+  "elections": [
+    {
+      "id": "2000",
+      "name": "VIP Test Election",
+      "electionDay": "2025-06-06",
+      "ocdDivisionId": "ocd-division/country:us"
+    },
+    {
+      "id": "7167",
+      "name": "Oklahoma Election",
+      "electionDay": "2022-02-08",
+      "ocdDivisionId": "ocd-division/country:us/state:ok"
+    },
+    {
+      "id": "7168",
+      "name": "Washington Special Election",
+      "electionDay": "2022-02-08",
+      "ocdDivisionId": "ocd-division/country:us/state:wa"
+    },
+    {
+      "id": "7169",
+      "name": "California Special Election",
+      "electionDay": "2022-02-15",
+      "ocdDivisionId": "ocd-division/country:us/state:ca"
+    }
+  ],
+  "kind": "civicinfo#electionsQueryResponse"
+}

@@ -12,10 +12,13 @@ interface ElectionDao {
 
     // Add select all election query
     @Query("SELECT * FROM election_table")
-    fun getUpcomingElections():LiveData<List<Election>>
+    fun observeUpcomingElections():LiveData<List<Election>>
+
+    @Query("SELECT * FROM election_table")
+    fun getUpcomingElections():List<Election>
 
     @Query("SELECT * FROM election_table WHERE saved = 1")
-    fun getSavedElections():LiveData<List<Election>>
+    fun observeSavedElections():LiveData<List<Election>>
 
     // Add select single election query
     @Query("SELECT * FROM election_table WHERE id = :id")
@@ -24,5 +27,12 @@ interface ElectionDao {
     // Add delete query
     @Query("DELETE FROM election_table")
     fun deleteAll()
+
+    @Query("UPDATE election_table SET saved = 1 WHERE id = :id")
+    fun markAsSaved(id: Int)
+
+    @Query("UPDATE election_table SET saved = 0 WHERE id = :id")
+    fun markAsNotSaved(id: Int)
+
 
 }

@@ -1,28 +1,34 @@
 package com.example.android.politicalpreparedness.repository
 
+import android.util.Log
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.Transformations
-import com.example.android.politicalpreparedness.database.ElectionDatabase
+import com.example.android.politicalpreparedness.election.TAG
 import com.example.android.politicalpreparedness.election.domain.ElectionDomainModel
-import com.example.android.politicalpreparedness.network.CivicsApi
-import com.example.android.politicalpreparedness.network.models.asDomainModel
+import com.example.android.politicalpreparedness.source.local.LocalElectionDataSource
+import com.example.android.politicalpreparedness.source.remote.RemoteElectionDataSource
+import com.udacity.project4.utils.wrapEspressoIdlingResource
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class ElectionRepository(private val database: ElectionDatabase){
+class ElectionRepository(private val localElectionDataSource: LocalElectionDataSource,
+                         private val remoteElectionDataSource: RemoteElectionDataSource,
+                         private val dispatcher: CoroutineDispatcher = Dispatchers.IO){
 
-    val elections: LiveData<List<ElectionDomainModel>> = Transformations.map(database.electionDao.getUpcomingElections()){
-        it.asDomainModel()
-    }
+    val elections: LiveData<Result<List<ElectionDomainModel>>> = localElectionDataSource.observerFollowingElections()
 
-    val savedElections: LiveData<List<ElectionDomainModel>> = Transformations.map(database.electionDao.getSavedElections()){
-        it.asDomainModel()
-    }
+    val savedElections: LiveData<Result<List<ElectionDomainModel>>> = localElectionDataSource.observerSavedElections()
 
-    suspend fun refreshElections(){
-        withContext(Dispatchers.IO){
-            val elections = CivicsApi.retrofitService.getElections()
-            database.electionDao.insertUpcomingElections(*elections.elections.toTypedArray())
+    suspend fun refreshElectionsFromNetwork(){
+        wrapEspressoIdlingResource {
+            withContext(dispatcher){
+                val elections = remoteElectionDataSource.getElections()
+                if(elections.isSuccess){
+                    val electionList = elections.getOrDefault(defaultValue = listOf<ElectionDomainModel>())
+                    Log.i("refreshElectionsFromNetwork", "$electionList")
+                    localElectionDataSource.saveElections(electionList)
+                }
+            }
         }
     }
 }

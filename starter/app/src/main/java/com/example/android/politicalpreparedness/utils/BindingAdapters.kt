@@ -2,6 +2,7 @@ package com.udacity.project4.utils
 
 
 import android.util.Log
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -14,10 +15,12 @@ import java.util.*
 
 @BindingAdapter("listData")
     fun bindRecyclerView(recyclerView: RecyclerView, data: List<ElectionDomainModel>?) {
-        if(! data.isNullOrEmpty()){
-            val adapter = recyclerView.adapter as ElectionListAdapter
-            adapter.submitList(data)
-        }
+        val adapter = recyclerView.adapter as ElectionListAdapter
+        if (data != null) {
+            if(data.isNotEmpty()){
+                adapter.submitList(data)
+            }
+    }
     }
 
 @BindingAdapter("electionDate")
@@ -26,4 +29,14 @@ fun TextView.displayDate(date: Date){
     formatter.timeZone = TimeZone.getTimeZone("EDT")
     val result = formatter.format(date)
     this.text = result
+}
+
+@BindingAdapter("setStatusProgressBar")
+fun ProgressBar.isLoading(status: Boolean){
+    if (status){
+        this.visibility = ProgressBar.VISIBLE
+    }
+    else{
+        this.visibility = ProgressBar.INVISIBLE
+    }
 }
