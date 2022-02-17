@@ -15,6 +15,20 @@ class ElectionsViewModel(val app:Application, private val electionRepository: El
     val isLoadingDB: LiveData<Boolean>
         get() = _isLoadingDB
 
+
+//    private val _navigateToElectionDetail = MutableLiveData<ElectionDomainModel?>()
+//    val navigateToElectionDetail
+//        get() = _navigateToElectionDetail
+//
+//    fun onElectionClicked(selectedElection: ElectionDomainModel){
+//        _navigateToElectionDetail.value = selectedElection
+//    }
+//
+//    fun onElectionDetailsNavigated() {
+//        _navigateToElectionDetail.value = null
+//    }
+
+
     val upcomingElections: LiveData<List<ElectionDomainModel>> = Transformations.map(electionRepository.elections){ it ->
         if(it.isSuccess){
             it.getOrDefault(defaultValue = listOf<ElectionDomainModel>())
