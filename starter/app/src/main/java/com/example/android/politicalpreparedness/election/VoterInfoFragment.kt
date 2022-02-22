@@ -1,45 +1,247 @@
 package com.example.android.politicalpreparedness.election
 
+import android.Manifest
+import android.annotation.SuppressLint
+import android.annotation.TargetApi
+import android.content.Intent
+import android.content.IntentSender
+import android.content.pm.PackageManager
+import android.location.Address
+import android.location.Geocoder
+import android.net.Uri
 import android.os.Bundle
-import android.view.*
+import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.app.ActivityCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import com.example.android.politicalpreparedness.R
 import com.example.android.politicalpreparedness.databinding.FragmentVoterInfoBinding
-import org.koin.android.ext.android.bind
+import com.google.android.gms.common.api.ResolvableApiException
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.LocationSettingsRequest
+import com.google.android.material.snackbar.Snackbar
+import org.koin.androidx.viewmodel.ext.android.viewModel
+
+const val REQUEST_LOCATION_PERMISSION = 1
+const val REQUEST_TURN_DEVICE_LOCATION_ON = 29
 
 class VoterInfoFragment : Fragment() {
 
     private lateinit var binding: FragmentVoterInfoBinding
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private val viewModel: VoterInfoViewModel by viewModel()
 
-    override fun onCreateView(inflater: LayoutInflater,
-                              container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    @TargetApi(29)
+    private fun isPermissionGranted(): Boolean {
+        return (
+                PackageManager.PERMISSION_GRANTED ==
+                        ActivityCompat.checkSelfPermission(
+                            requireContext(),
+                            Manifest.permission.ACCESS_FINE_LOCATION
+                        ) && PackageManager.PERMISSION_GRANTED ==
+                        ActivityCompat.checkSelfPermission(
+                            requireContext(),
+                            Manifest.permission.ACCESS_COARSE_LOCATION
+                        ))
+    }
 
-        //TODO: Add ViewModel values and create ViewModel
+    private val locationPermissionRequest = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { permissions ->
+        when {
+            permissions.getOrDefault(Manifest.permission.ACCESS_FINE_LOCATION, false) -> {
+                // Precise location access granted.
+                Log.d("locationPermissionRequest", "Precise location access granted.")
+                getLastDeviceLocation()
+            }
+            permissions.getOrDefault(Manifest.permission.ACCESS_COARSE_LOCATION, false) -> {
 
-        //TODO: Add binding values
+                // Only approximate location access granted.
+            }
+            else -> {
+                // No location access granted.
+                Log.w("locationPermissionRequest", "Warning No location access granted.")
+            }
+        }
+    }
+
+    //    @RequiresPermission(android.Manifest.permission.ACCESS_FINE_LOCATION)
+    @SuppressLint("MissingPermission")
+    private fun getLastDeviceLocation(): Address? {
+        var address: Address? = null
+        fusedLocationClient.lastLocation.addOnCompleteListener(requireActivity()) { task ->
+            if (task.isSuccessful) {
+                val lastKnownLocation = task.result
+                if (lastKnownLocation != null) {
+                    try {
+                        address =
+                            Geocoder(requireContext()).getFromLocation(
+                                lastKnownLocation.latitude,
+                                lastKnownLocation.longitude,
+                                1
+                            )
+                                .firstOrNull()
+                        Log.d("getLastDeviceLocation", "Address is: $address")
+                        setVoterInfo(address)
+                    } catch (ex: Exception) {
+                        Log.d("getLastDeviceLocation", "Failed to get Address from location")
+                    }
+                }
+            } else {
+                Log.d("getLastDeviceLocation", "Task failed, Failed to get Address from location")
+            }
+        }
+        return address
+    }
+
+    private fun setVoterInfo(address: Address?) {
+        if (address != null) {
+            viewModel.getVoterInfo(address)
+        } else {
+            Log.d(
+                "VoterInfoFragment",
+                getString(R.string.error_failed_to_get_address_from_location)
+            )
+            showSnackbar(getString(R.string.error_failed_to_get_address_from_location))
+
+        }
+    }
+
+    private fun showSnackbar(text: String) {
+        Snackbar.make(binding.root, text, Snackbar.LENGTH_SHORT).show()
+    }
+
+    private fun checkDeviceLocationSettings(resolve: Boolean = true) {
+        val locationRequest = LocationRequest.create().apply {
+            priority = LocationRequest.PRIORITY_LOW_POWER
+        }
+        val builder = LocationSettingsRequest.Builder().addLocationRequest(locationRequest)
+        val settingsClient = LocationServices.getSettingsClient(requireActivity())
+        val locationSettingsResponseTask =
+            settingsClient.checkLocationSettings(builder.build())
+        locationSettingsResponseTask.addOnFailureListener { exception ->
+            if (exception is ResolvableApiException && resolve) {
+                try {
+                    exception.startResolutionForResult(
+                        requireActivity(),
+                        REQUEST_TURN_DEVICE_LOCATION_ON
+                    )
+                } catch (sendEx: IntentSender.SendIntentException) {
+                    Log.d(TAG, "Error getting location settings resolution: " + sendEx.message)
+                }
+            } else {
+                Log.d("checkDeviceLocationSettings", "Device location is off, required to turn on")
+                showSnackbar("Device location is OFF, turn it on to get voter detailed data")
+            }
+        }
+        locationSettingsResponseTask.addOnCompleteListener {
+            if (it.isSuccessful) {
+                Log.d("checkDeviceLocationSettings", "Succeeded Device location is ON")
+                getLastDeviceLocation()
+            }
+        }
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        // Add binding values
         binding = DataBindingUtil.inflate(
-                inflater,
-                R.layout.fragment_voter_info,
-                container,
-                false)
+            inflater,
+            R.layout.fragment_voter_info,
+            container,
+            false
+        )
+        binding.lifecycleOwner = this
 
-        //TODO: Populate voter info -- hide views without provided data.
-        /**
-        Hint: You will need to ensure proper data is provided from previous fragment.
-        */
+        val args = VoterInfoFragmentArgs.fromBundle(requireArguments())
+        Log.d(
+            "VoterInfoFragment",
+            "Received election id:${args.argElectionId}, division:${args.argDivision}"
+        )
+
+        // Add ViewModel values and create ViewModel
+        binding.viewModel = viewModel
+
+        // Handle loading of URLs
+        binding.stateBallot.setOnClickListener {
+            if (viewModel.voterInfo.value?.state?.get(0)?.electionAdministrationBody?.ballotInfoUrl != null) {
+                viewModel.voterInfo.value!!.state?.get(0)?.electionAdministrationBody?.ballotInfoUrl?.let { url ->
+                    loadURLIntents(url)
+                }
+            } else {
+                Log.d("VoterInfoFragment", "Able to get state ballot url")
+            }
+        }
+
+        binding.stateLocations.setOnClickListener {
+            if (viewModel.voterInfo.value?.state?.get(0)?.electionAdministrationBody?.votingLocationFinderUrl != null) {
+                Log.d("VoterInfoFragment", "Able to get state voting location url")
+                viewModel.voterInfo.value!!.state?.get(0)?.electionAdministrationBody?.votingLocationFinderUrl?.let { url ->
+                    loadURLIntents(url)
+                }
+            } else {
+                Log.d("VoterInfoFragment", "Unable to get voting location url")
+            }
+        }
+        viewModel.getElectionMainInfo(args.argElectionId)
 
 
-        //TODO: Handle loading of URLs
+        // Handle save button UI state
+        // cont'd Handle save button clicks
+        binding.saveElectionButton.setOnClickListener {
+            viewModel.election.value?.saved.let {
+                if (it == true) {
+                    viewModel.unfollowElection()
+                } else {
+                    viewModel.followElection()
+                }
+            }
+        }
 
-        //TODO: Handle save button UI state
-        //TODO: cont'd Handle save button clicks
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
 
-        return(binding.root)
+        return (binding.root)
 
     }
 
-    //TODO: Create method to load URL intents
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        // Populate voter info -- hide views without provided data.
+        /**
+        Hint: You will need to ensure proper data is provided from previous fragment.
+         */
+        ////    To display the system permissions dialog when necessary, call the launch() method on the instance of ActivityResultLauncher that you saved in the previous step.
+        //// Before you perform the actual permission request, check whether your app
+        //// already has the permissions, and whether your app needs to show a permission
+        //// rationale dialog. For more details, see Request permissions.
+        checkDeviceLocationSettings()
+        if (isPermissionGranted()) {
+            Log.d("onCreateView", "Permissions granted")
+            getLastDeviceLocation()
+        } else {
+            locationPermissionRequest.launch(
+                arrayOf(
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                )
+            )
+        }
 
+    }
+
+    // Create method to load URL intents
+    fun loadURLIntents(url: String) {
+        val intent = Intent(Intent.ACTION_VIEW)
+        intent.data = Uri.parse(url)
+        startActivity(intent)
+    }
 }

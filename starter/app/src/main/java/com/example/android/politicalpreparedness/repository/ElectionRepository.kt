@@ -2,8 +2,9 @@ package com.example.android.politicalpreparedness.repository
 
 import android.util.Log
 import androidx.lifecycle.LiveData
-import com.example.android.politicalpreparedness.election.TAG
 import com.example.android.politicalpreparedness.election.domain.ElectionDomainModel
+import com.example.android.politicalpreparedness.network.models.Election
+import com.example.android.politicalpreparedness.network.models.VoterInfo
 import com.example.android.politicalpreparedness.source.local.LocalElectionDataSource
 import com.example.android.politicalpreparedness.source.remote.RemoteElectionDataSource
 import com.udacity.project4.utils.wrapEspressoIdlingResource
@@ -24,10 +25,48 @@ class ElectionRepository(private val localElectionDataSource: LocalElectionDataS
             withContext(dispatcher){
                 val elections = remoteElectionDataSource.getElections()
                 if(elections.isSuccess){
+                    // Remote elections
                     val electionList = elections.getOrDefault(defaultValue = listOf<ElectionDomainModel>())
-                    Log.i("refreshElectionsFromNetwork", "$electionList")
+                    val localElections = localElectionDataSource.getElections()
+                    // Clear datasource for passed elections
+                    localElectionDataSource.deleteAll()
                     localElectionDataSource.saveElections(electionList)
+                    val saved = localElections.getOrDefault(listOf()).filter { it.saved }
+                    localElectionDataSource.saveElections(saved)
+                    Log.i("refreshElectionsFromNetwork", "$electionList")
                 }
+            }
+        }
+    }
+
+    suspend fun getElectionDetailsFromNetwork(id:String, date:String): Result<VoterInfo>{
+        return wrapEspressoIdlingResource {
+            withContext(dispatcher) {
+                remoteElectionDataSource.getElectionDetails(id, date)
+            }
+        }
+    }
+
+    suspend fun getElectionById(electionId:Int): Result<ElectionDomainModel>{
+        return wrapEspressoIdlingResource {
+            withContext(dispatcher) {
+                localElectionDataSource.getElection(electionId)
+            }
+        }
+    }
+
+    suspend fun followElectionState(election: ElectionDomainModel){
+        return wrapEspressoIdlingResource {
+            withContext(dispatcher){
+                localElectionDataSource.markAsSaved(election)
+            }
+        }
+    }
+
+    suspend fun unfollowElectionState(election: ElectionDomainModel){
+        return wrapEspressoIdlingResource {
+            withContext(dispatcher){
+                localElectionDataSource.markAsNotSaved(election)
             }
         }
     }

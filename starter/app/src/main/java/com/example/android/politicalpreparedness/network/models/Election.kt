@@ -25,3 +25,15 @@ fun List<Election>.asDomainModel(): List<ElectionDomainModel> {
                 )
         }
 }
+
+fun Election.asDomainModel(): ElectionDomainModel {
+        return let{
+                ElectionDomainModel(
+                        id = it.id,
+                        name = it.name,
+                        electionDay = it.electionDay,
+                        division = it.division,
+                        saved = it.saved
+                )
+        }
+}

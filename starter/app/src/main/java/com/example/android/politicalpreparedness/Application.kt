@@ -4,6 +4,7 @@ import android.app.Application
 import com.example.android.politicalpreparedness.database.ElectionDao
 import com.example.android.politicalpreparedness.database.ElectionDatabase
 import com.example.android.politicalpreparedness.election.ElectionsViewModel
+import com.example.android.politicalpreparedness.election.VoterInfoViewModel
 import com.example.android.politicalpreparedness.network.CivicsApi
 import com.example.android.politicalpreparedness.network.CivicsApiService
 import com.example.android.politicalpreparedness.repository.ElectionRepository
@@ -24,9 +25,10 @@ class MyApp : Application() {
         super.onCreate()
 
         val module = module {
-            viewModel { ElectionsViewModel(this@MyApp, get())}
+            viewModel { ElectionsViewModel(this@MyApp, get()) }
+            viewModel { VoterInfoViewModel(get()) }
 //            viewModel { RepresentativeViewModel(get()) }
-            single { ElectionDatabase.getInstance(this@MyApp)}
+            single { ElectionDatabase.getInstance(this@MyApp) }
             single { CivicsApi.retrofitService as CivicsApiService }
 
             single(qualifier = named("local")) { LocalElectionDataSource(get(), Dispatchers.IO) }

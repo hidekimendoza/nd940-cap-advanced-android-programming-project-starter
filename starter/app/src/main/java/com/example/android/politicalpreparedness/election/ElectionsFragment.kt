@@ -19,7 +19,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 const val TAG = "ElectionFragment"
 
-class ElectionsFragment: Fragment() {
+class ElectionsFragment : Fragment() {
 
     private lateinit var binding: FragmentElectionBinding
     private lateinit var upcomingAdapter: ElectionListAdapter
@@ -28,15 +28,18 @@ class ElectionsFragment: Fragment() {
     //Declare ViewModel
     private val viewModel: ElectionsViewModel by viewModel()
 
-    override fun onCreateView(inflater: LayoutInflater,
-                              container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         // Add binding values
         binding = DataBindingUtil.inflate(
             inflater,
             R.layout.fragment_election,
             container,
-            false)
+            false
+        )
 
         // Add ViewModel values and create ViewModel
         binding.viewModel = viewModel
@@ -59,7 +62,7 @@ class ElectionsFragment: Fragment() {
         })
 
         viewModel.savedElections.observe(viewLifecycleOwner, Observer { electionList ->
-            upcomingAdapter.submitList(electionList)
+            savedAdapter.submitList(electionList)
         })
 
 
@@ -69,11 +72,17 @@ class ElectionsFragment: Fragment() {
         return binding.root
     }
 
-    private fun navigateToSelectedElection(election: ElectionDomainModel){
-        Log.i(TAG, "Upcoming election with ID: {${election.id}} selected with division ${election.division}")
-        this.findNavController().navigate(ElectionsFragmentDirections.actionElectionsFragmentToVoterInfoFragment2(
+    private fun navigateToSelectedElection(election: ElectionDomainModel) {
+        Log.i(
+            TAG,
+            "Upcoming election with ID: {${election.id}} selected with division ${election.division}"
+        )
+        this.findNavController().navigate(
+            ElectionsFragmentDirections.actionElectionsFragmentToVoterInfoFragment2(
                 election.id,
-                election.division))
+                election.division
+            )
+        )
     }
 
     //TODO: Refresh adapters when fragment loads

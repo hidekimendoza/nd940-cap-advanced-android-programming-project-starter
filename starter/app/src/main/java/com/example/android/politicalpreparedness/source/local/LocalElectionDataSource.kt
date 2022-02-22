@@ -40,6 +40,18 @@ class LocalElectionDataSource(
         }
     }
 
+    suspend fun getElection(id:Int):Result<ElectionDomainModel>{
+        return withContext(ioDispatcher){
+            val result: Result<ElectionDomainModel> = try {
+                Result.success(database.electionDao.getUpcomingElection(id).asDomainModel())
+            } catch(exc: Exception){
+                Result.failure(
+                    RuntimeException("Unable to get election from database"))
+            }
+            result
+        }
+    }
+
     override suspend fun saveElections(elections: List<ElectionDomainModel>) = withContext(ioDispatcher) {
         database.electionDao.insertUpcomingElections(*elections.toDataModel().toTypedArray())}
 

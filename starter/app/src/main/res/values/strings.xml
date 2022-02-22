@@ -7,6 +7,7 @@
     <string name="ballot_logo_image">Ballot Logo Image</string>
     <string name="upcoming_elections_button">Upcoming elections button</string>
     <string name="find_my_representatives_button">Find my  representatives button</string>
+    <string name="error_failed_to_get_address_from_location">Error, Failed to get address from device location</string>
 
     <!-- TODO: Add necessary string values -->
 
