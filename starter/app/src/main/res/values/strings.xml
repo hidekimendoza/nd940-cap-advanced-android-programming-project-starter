@@ -8,6 +8,17 @@
     <string name="upcoming_elections_button">Upcoming elections button</string>
     <string name="find_my_representatives_button">Find my  representatives button</string>
     <string name="error_failed_to_get_address_from_location">Error, Failed to get address from device location</string>
+    <string name="representative_search">Representative Search</string>
+    <string name="use_my_location">Use my location</string>
+    <string name="my_representatives">My Representatives</string>
+    <string name="address_line_1">Address Line 1</string>
+    <string name="address_line_2">Address Line 2</string>
+    <string name="city">City</string>
+    <string name="zip">Zip</string>
+    <string name="representative_image">Representative image</string>
+    <string name="representative_www_link">representative www link</string>
+    <string name="representative_fb_link">representative fb link</string>
+    <string name="representative_twitter_link">representative twitter link</string>
 
     <!-- TODO: Add necessary string values -->
 

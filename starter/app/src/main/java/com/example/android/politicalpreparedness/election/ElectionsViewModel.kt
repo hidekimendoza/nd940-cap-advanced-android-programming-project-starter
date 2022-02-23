@@ -15,7 +15,6 @@ class ElectionsViewModel(val app:Application, private val electionRepository: El
     val isLoadingDB: LiveData<Boolean>
         get() = _isLoadingDB
 
-
 //    private val _navigateToElectionDetail = MutableLiveData<ElectionDomainModel?>()
 //    val navigateToElectionDetail
 //        get() = _navigateToElectionDetail
@@ -31,19 +30,19 @@ class ElectionsViewModel(val app:Application, private val electionRepository: El
 
     val upcomingElections: LiveData<List<ElectionDomainModel>> = Transformations.map(electionRepository.elections){ it ->
         if(it.isSuccess){
-            it.getOrDefault(defaultValue = listOf<ElectionDomainModel>())
+            it.getOrDefault(defaultValue = listOf())
         }
         else{
-            listOf<ElectionDomainModel>()
+            listOf()
         }
     }
 
 
-    val savedElections = Transformations.map(electionRepository.savedElections) { it ->
+    val savedElections = Transformations.map(electionRepository.savedElections) {
         if (it.isSuccess) {
-            it.getOrDefault(defaultValue = listOf<ElectionDomainModel>())
+            it.getOrDefault(defaultValue = listOf())
         } else {
-            listOf<ElectionDomainModel>()
+            listOf()
         }
     }
 

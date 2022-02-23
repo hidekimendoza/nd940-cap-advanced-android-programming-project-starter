@@ -29,14 +29,14 @@ class DetailFragment : Fragment() {
         //TODO: Establish bindings
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_representative, container, false)
 
-        return binding.root
-
-
         //TODO: Define and assign Representative adapter
 
         //TODO: Populate Representative adapter
 
         //TODO: Establish button listeners for field and location search
+
+        return binding.root
+
 
     }
 //

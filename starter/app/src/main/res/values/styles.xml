@@ -21,4 +21,15 @@
         <item name="android:layout_marginTop">4dp</item>
         <item name="android:textSize">14sp</item>
     </style>
+
+    <style name="link_style">
+        <item name="android:layout_width">40dp</item>
+        <item name="android:layout_height">40dp</item>
+        <item name="android:layout_marginEnd">8dp</item>
+    </style>
+
+    <style name="representative_info">
+        <item name="android:textSize">14sp</item>
+        <item name="android:padding">4dp</item>
+    </style>
 </resources>

@@ -8,18 +8,14 @@ import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
 
 @RunWith(AndroidJUnit4::class)
-class CivicsApiTest{
+class CivicsApiTest {
 
 
     @Test
-    fun getElections() = runBlocking{
+    fun getElections() = runBlocking {
         val api = CivicsApi
         val elections = api.retrofitService.getElections()
         assert(true)
     }
 
-    @Test
-    fun test_two(){
-        assert(true)
-    }
 }

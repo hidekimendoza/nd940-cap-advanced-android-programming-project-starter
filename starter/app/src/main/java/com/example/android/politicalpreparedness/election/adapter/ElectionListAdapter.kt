@@ -9,11 +9,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.android.politicalpreparedness.databinding.ElectionElementBinding
 import com.example.android.politicalpreparedness.election.TAG
 import com.example.android.politicalpreparedness.election.domain.ElectionDomainModel
-import com.example.android.politicalpreparedness.network.models.Division
-import com.example.android.politicalpreparedness.network.models.Election
-import java.util.*
 
-class ElectionListAdapter(private val clickListener: ElectionListener):
+class ElectionListAdapter(private val clickListener: ElectionListener) :
     ListAdapter<ElectionDomainModel, ElectionListAdapter.ElectionViewHolder>(ElectionDiffCallback()) {
 
 
@@ -23,16 +20,17 @@ class ElectionListAdapter(private val clickListener: ElectionListener):
 
     // Bind ViewHolder
     override fun onBindViewHolder(holder: ElectionViewHolder, position: Int) {
-        val election:ElectionDomainModel = getItem(position)
+        val election: ElectionDomainModel = getItem(position)
         holder.bind(clickListener, election)
     }
 
     // Create ElectionViewHolder
-    class ElectionViewHolder private  constructor(private val electionBinding: ElectionElementBinding) :RecyclerView.ViewHolder(electionBinding.root){
+    class ElectionViewHolder private constructor(private val electionBinding: ElectionElementBinding) :
+        RecyclerView.ViewHolder(electionBinding.root) {
         fun bind(
             clickListener: ElectionListener,
             currentElection: ElectionDomainModel
-        ){
+        ) {
             Log.d(TAG, "Binding election $currentElection")
             electionBinding.election = currentElection
             electionBinding.executePendingBindings()
@@ -51,17 +49,24 @@ class ElectionListAdapter(private val clickListener: ElectionListener):
 }
 
 // Create ElectionDiffCallback
-class ElectionDiffCallback : DiffUtil.ItemCallback<ElectionDomainModel>(){
-    override fun areItemsTheSame(oldItem: ElectionDomainModel, newItem: ElectionDomainModel): Boolean {
+class ElectionDiffCallback : DiffUtil.ItemCallback<ElectionDomainModel>() {
+    override fun areItemsTheSame(
+        oldItem: ElectionDomainModel,
+        newItem: ElectionDomainModel
+    ): Boolean {
         return oldItem.id == newItem.id
     }
 
-    override fun areContentsTheSame(oldItem: ElectionDomainModel, newItem: ElectionDomainModel): Boolean {
+    override fun areContentsTheSame(
+        oldItem: ElectionDomainModel,
+        newItem: ElectionDomainModel
+    ): Boolean {
         return oldItem == newItem
     }
 
 }
+
 // Create ElectionListener
-class ElectionListener(val clickListener: (election: ElectionDomainModel) -> Unit){
+class ElectionListener(val clickListener: (election: ElectionDomainModel) -> Unit) {
     fun onClick(election: ElectionDomainModel) = clickListener(election)
 }
