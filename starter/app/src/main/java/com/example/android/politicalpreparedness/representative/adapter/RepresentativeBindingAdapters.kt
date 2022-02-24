@@ -1,10 +1,12 @@
 package com.example.android.politicalpreparedness.representative.adapter
 
 import android.widget.ArrayAdapter
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Spinner
 import androidx.core.net.toUri
 import androidx.databinding.BindingAdapter
+import com.example.android.politicalpreparedness.network.models.Address
 
 @BindingAdapter("profileImage")
 fun fetchImage(view: ImageView, src: String?) {

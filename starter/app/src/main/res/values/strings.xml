@@ -19,6 +19,10 @@
     <string name="representative_www_link">representative www link</string>
     <string name="representative_fb_link">representative fb link</string>
     <string name="representative_twitter_link">representative twitter link</string>
+    <string name="error_missing_first_line_address">Error, missing first line address</string>
+    <string name="error_missing_city">Error, missing city</string>
+    <string name="error_missing_state">Error, missing state</string>
+    <string name="error_missing_zip">Error, missing zip code</string>
 
     <!-- TODO: Add necessary string values -->
 

@@ -2,10 +2,7 @@ package com.example.android.politicalpreparedness.election
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.annotation.TargetApi
 import android.content.Intent
-import android.content.IntentSender
-import android.content.pm.PackageManager
 import android.location.Address
 import android.location.Geocoder
 import android.net.Uri
@@ -15,41 +12,22 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.app.ActivityCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import com.example.android.politicalpreparedness.R
 import com.example.android.politicalpreparedness.databinding.FragmentVoterInfoBinding
-import com.google.android.gms.common.api.ResolvableApiException
+import com.example.android.politicalpreparedness.utils.checkDeviceLocationSettings
+import com.example.android.politicalpreparedness.utils.isPermissionGranted
 import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
-import com.google.android.gms.location.LocationSettingsRequest
 import com.google.android.material.snackbar.Snackbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
-
-const val REQUEST_LOCATION_PERMISSION = 1
-const val REQUEST_TURN_DEVICE_LOCATION_ON = 29
 
 class VoterInfoFragment : Fragment() {
 
     private lateinit var binding: FragmentVoterInfoBinding
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private val viewModel: VoterInfoViewModel by viewModel()
-
-    @TargetApi(29)
-    private fun isPermissionGranted(): Boolean {
-        return (
-                PackageManager.PERMISSION_GRANTED ==
-                        ActivityCompat.checkSelfPermission(
-                            requireContext(),
-                            Manifest.permission.ACCESS_FINE_LOCATION
-                        ) && PackageManager.PERMISSION_GRANTED ==
-                        ActivityCompat.checkSelfPermission(
-                            requireContext(),
-                            Manifest.permission.ACCESS_COARSE_LOCATION
-                        ))
-    }
 
     private val locationPermissionRequest = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
@@ -61,89 +39,11 @@ class VoterInfoFragment : Fragment() {
                 getLastDeviceLocation()
             }
             permissions.getOrDefault(Manifest.permission.ACCESS_COARSE_LOCATION, false) -> {
-
                 // Only approximate location access granted.
             }
             else -> {
                 // No location access granted.
                 Log.w("locationPermissionRequest", "Warning No location access granted.")
-            }
-        }
-    }
-
-    //    @RequiresPermission(android.Manifest.permission.ACCESS_FINE_LOCATION)
-    @SuppressLint("MissingPermission")
-    private fun getLastDeviceLocation(): Address? {
-        var address: Address? = null
-        fusedLocationClient.lastLocation.addOnCompleteListener(requireActivity()) { task ->
-            if (task.isSuccessful) {
-                val lastKnownLocation = task.result
-                if (lastKnownLocation != null) {
-                    try {
-                        address =
-                            Geocoder(requireContext()).getFromLocation(
-                                lastKnownLocation.latitude,
-                                lastKnownLocation.longitude,
-                                1
-                            )
-                                .firstOrNull()
-                        Log.d("getLastDeviceLocation", "Address is: $address")
-                        setVoterInfo(address)
-                    } catch (ex: Exception) {
-                        Log.d("getLastDeviceLocation", "Failed to get Address from location")
-                    }
-                }
-            } else {
-                Log.d("getLastDeviceLocation", "Task failed, Failed to get Address from location")
-            }
-        }
-        return address
-    }
-
-    private fun setVoterInfo(address: Address?) {
-        if (address != null) {
-            viewModel.getVoterInfo(address)
-        } else {
-            Log.d(
-                "VoterInfoFragment",
-                getString(R.string.error_failed_to_get_address_from_location)
-            )
-            showSnackbar(getString(R.string.error_failed_to_get_address_from_location))
-
-        }
-    }
-
-    private fun showSnackbar(text: String) {
-        Snackbar.make(binding.root, text, Snackbar.LENGTH_SHORT).show()
-    }
-
-    private fun checkDeviceLocationSettings(resolve: Boolean = true) {
-        val locationRequest = LocationRequest.create().apply {
-            priority = LocationRequest.PRIORITY_LOW_POWER
-        }
-        val builder = LocationSettingsRequest.Builder().addLocationRequest(locationRequest)
-        val settingsClient = LocationServices.getSettingsClient(requireActivity())
-        val locationSettingsResponseTask =
-            settingsClient.checkLocationSettings(builder.build())
-        locationSettingsResponseTask.addOnFailureListener { exception ->
-            if (exception is ResolvableApiException && resolve) {
-                try {
-                    exception.startResolutionForResult(
-                        requireActivity(),
-                        REQUEST_TURN_DEVICE_LOCATION_ON
-                    )
-                } catch (sendEx: IntentSender.SendIntentException) {
-                    Log.d(TAG, "Error getting location settings resolution: " + sendEx.message)
-                }
-            } else {
-                Log.d("checkDeviceLocationSettings", "Device location is off, required to turn on")
-                showSnackbar("Device location is OFF, turn it on to get voter detailed data")
-            }
-        }
-        locationSettingsResponseTask.addOnCompleteListener {
-            if (it.isSuccessful) {
-                Log.d("checkDeviceLocationSettings", "Succeeded Device location is ON")
-                getLastDeviceLocation()
             }
         }
     }
@@ -223,8 +123,8 @@ class VoterInfoFragment : Fragment() {
         //// Before you perform the actual permission request, check whether your app
         //// already has the permissions, and whether your app needs to show a permission
         //// rationale dialog. For more details, see Request permissions.
-        checkDeviceLocationSettings()
-        if (isPermissionGranted()) {
+        checkDeviceLocationSettings(requireActivity(), { getLastDeviceLocation() })
+        if (isPermissionGranted(requireContext())) {
             Log.d("onCreateView", "Permissions granted")
             getLastDeviceLocation()
         } else {
@@ -236,6 +136,50 @@ class VoterInfoFragment : Fragment() {
             )
         }
 
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun getLastDeviceLocation():Unit{
+        var address: Address? = null
+        fusedLocationClient.lastLocation.addOnCompleteListener(requireActivity()) { task ->
+            if (task.isSuccessful) {
+                val lastKnownLocation = task.result
+                if (lastKnownLocation != null) {
+                    try {
+                        address =
+                            Geocoder(requireContext()).getFromLocation(
+                                lastKnownLocation.latitude,
+                                lastKnownLocation.longitude,
+                                1
+                            )
+                                .firstOrNull()
+                        Log.d("getLastDeviceLocation", "Address is: $address")
+                        setVoterInfo(address)
+                    } catch (ex: Exception) {
+                        Log.d("getLastDeviceLocation", "Failed to get Address from location")
+                    }
+                }
+            } else {
+                Log.d("getLastDeviceLocation", "Task failed, Failed to get Address from location")
+            }
+        }
+    }
+
+    private fun setVoterInfo(address: Address?) {
+        if (address != null) {
+            viewModel.getVoterInfo(address)
+        } else {
+            Log.d(
+                "VoterInfoFragment",
+                getString(R.string.error_failed_to_get_address_from_location)
+            )
+            showSnackbar(getString(R.string.error_failed_to_get_address_from_location))
+
+        }
+    }
+
+    private fun showSnackbar(text: String) {
+        Snackbar.make(binding.root, text, Snackbar.LENGTH_SHORT).show()
     }
 
     // Create method to load URL intents
