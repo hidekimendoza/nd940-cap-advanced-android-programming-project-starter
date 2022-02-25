@@ -35,7 +35,6 @@
             android:id="@+id/address_line_1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:autofillHints=""
             android:text='@={viewModel.line1}'
             android:hint="@string/address_line_1"
             android:inputType="textPostalAddress"
@@ -48,20 +47,18 @@
             android:id="@+id/address_line_2"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:autofillHints=""
             android:text="@={viewModel.line2}"
             android:hint="@string/address_line_2"
             android:inputType="textPostalAddress"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/address_line_1" />
 
-        <!-- TODO: Add data binding value -->
-        <!-- TODO: Add visual styling and content -->
+        <!-- Add data binding value -->
+        <!-- Add visual styling and content -->
         <EditText
             android:id="@+id/city"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:autofillHints=""
             android:text='@={viewModel.city}'
             android:hint="@string/city"
             android:inputType="textPostalAddress"
@@ -69,14 +66,13 @@
             app:layout_constraintEnd_toStartOf="@id/state"
             app:layout_constraintTop_toBottomOf="@id/address_line_2" />
 
-        <!-- TODO: Add default values from provided resources  -->
-        <!-- TODO: Add data binding value -->
-        <!-- TODO: Add visual styling and content -->
+        <!-- Add default values from provided resources  -->
+        <!-- Add data binding value -->
+        <!-- Add visual styling and content -->
         <Spinner
             android:id="@+id/state"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:autofillHints=""
             android:inputType="textPostalAddress"
             stateValue="@{viewModel.state}"
             android:entries="@array/states"
@@ -85,14 +81,13 @@
             app:layout_constraintTop_toTopOf="@id/city"
             app:layout_constraintBottom_toBottomOf="@id/city" />
 
-        <!-- TODO: Add data binding value -->
-        <!-- TODO: Add visual styling and content -->
+        <!-- Add data binding value -->
+        <!-- Add visual styling and content -->
         <EditText
             android:id="@+id/zip"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:hint="@string/zip"
-            android:autofillHints=""
             android:inputType="number"
             android:maxLength="5"
             android:text='@={viewModel.zip}'
@@ -100,7 +95,7 @@
             app:layout_constraintEnd_toEndOf="@id/city"
             app:layout_constraintTop_toBottomOf="@id/city" />
 
-        <!-- TODO: Add visual styling and label -->
+        <!-- Add visual styling and label -->
         <Button
             android:id="@+id/button_search"
             android:layout_width="match_parent"
@@ -108,7 +103,7 @@
             android:text="@string/find_my_representatives"
             app:layout_constraintTop_toBottomOf="@id/zip" />
 
-        <!-- TODO: Add visual styling and content -->
+        <!-- Add visual styling and content -->
         <Button
             android:id="@+id/button_location"
             android:layout_width="match_parent"
@@ -117,7 +112,7 @@
 
             app:layout_constraintTop_toBottomOf="@id/button_search" />
 
-        <!-- TODO: Add visual styling and content -->
+        <!-- Add visual styling and content -->
         <TextView
             android:id="@+id/representative_title"
             android:layout_width="wrap_content"
@@ -127,18 +122,21 @@
             android:text="@string/my_representatives"
             app:layout_constraintTop_toBottomOf="@id/button_location" />
 
-        <!-- TODO: Add Representatives RecyclerView -->
+        <!-- Add Representatives RecyclerView -->
+
+        <!-- Add visual styling and content -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/representatives_list"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_constraintTop_toBottomOf="@id/representative_title"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/representative_title"
+            app:layout_constraintVertical_bias="0.0" />
 
-        <!-- TODO: Add visual styling and content -->
         <TextView
             android:id="@+id/list_placeholder"
             android:layout_width="match_parent"
@@ -156,11 +154,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            app:setStatusRepresentativesProgressBar="@{viewModel.loadingRepresentatives}"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="@+id/representatives_list"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/representative_title"
-            app:layout_constraintTop_toBottomOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/representatives_list"
+            app:setStatusRepresentativesProgressBar="@{viewModel.loadingRepresentatives}" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <!--    </androidx.constraintlayout.motion.widget.MotionLayout>-->

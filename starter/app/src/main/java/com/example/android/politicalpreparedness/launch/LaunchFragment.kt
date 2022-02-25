@@ -21,7 +21,6 @@ class LaunchFragment : Fragment() {
             container,
             false
         )
-//        val binding = FragmentLaunchBinding.inflate(inflater)
         binding.lifecycleOwner = this
 
         binding.buttonFindMyRepresentatives.setOnClickListener { navToRepresentatives() }
