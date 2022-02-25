@@ -11,15 +11,14 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.android.politicalpreparedness.R
-import com.example.android.politicalpreparedness.databinding.ElectionElementBinding
 import com.example.android.politicalpreparedness.databinding.RepresentativeElementBinding
-import com.example.android.politicalpreparedness.election.adapter.ElectionListAdapter
-import com.example.android.politicalpreparedness.election.adapter.ElectionListener
-import com.example.android.politicalpreparedness.election.domain.ElectionDomainModel
 import com.example.android.politicalpreparedness.network.models.Channel
 import com.example.android.politicalpreparedness.representative.model.Representative
 
-class RepresentativeListAdapter(private val clickListener: RepresentativeListener): ListAdapter<Representative, RepresentativeListAdapter.RepresentativeViewHolder>(RepresentativeDiffCallback()) {
+class RepresentativeListAdapter(private val clickListener: RepresentativeListener) :
+    ListAdapter<Representative, RepresentativeListAdapter.RepresentativeViewHolder>(
+        RepresentativeDiffCallback()
+    ) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RepresentativeViewHolder {
         return RepresentativeViewHolder.from(parent)
@@ -33,21 +32,22 @@ class RepresentativeListAdapter(private val clickListener: RepresentativeListene
     class RepresentativeViewHolder(val binding: RepresentativeElementBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(clickListener: RepresentativeListener,
-                 representative: Representative) {
+        fun bind(
+            clickListener: RepresentativeListener,
+            representative: Representative
+        ) {
             binding.representative = representative
             binding.representativePhoto.setImageResource(R.drawable.ic_profile)
             binding.clickListener = clickListener
 
             // Show social links ** Hint: Use provided helper methods
-            if(representative.official.channels != null){
+            if (representative.official.channels != null) {
                 showSocialLinks(representative.official.channels)
             }
             // Show www link ** Hint: Use provided helper methods
 
-            if(representative.official.urls != null){
+            if (representative.official.urls != null) {
                 showWWWLinks(representative.official.urls)
-
             }
 
             binding.executePendingBindings()
@@ -106,7 +106,7 @@ class RepresentativeListAdapter(private val clickListener: RepresentativeListene
 }
 
 // Create RepresentativeDiffCallback
-class RepresentativeDiffCallback : DiffUtil.ItemCallback<Representative>(){
+class RepresentativeDiffCallback : DiffUtil.ItemCallback<Representative>() {
     override fun areItemsTheSame(oldItem: Representative, newItem: Representative): Boolean {
         return oldItem.official.name == newItem.official.name
     }
@@ -116,8 +116,9 @@ class RepresentativeDiffCallback : DiffUtil.ItemCallback<Representative>(){
     }
 
 }
+
 //Create RepresentativeListener
-class RepresentativeListener(val clickListener: (representative: Representative) -> Unit){
+class RepresentativeListener(val clickListener: (representative: Representative) -> Unit) {
     fun onClick(representative: Representative) = clickListener(representative)
 }
 

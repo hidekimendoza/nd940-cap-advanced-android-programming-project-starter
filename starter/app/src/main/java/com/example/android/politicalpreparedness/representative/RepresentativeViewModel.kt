@@ -4,12 +4,15 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.android.politicalpreparedness.R
 import com.example.android.politicalpreparedness.network.models.Address
 import com.example.android.politicalpreparedness.repository.ElectionRepository
+import com.example.android.politicalpreparedness.representative.model.Representative
 import com.example.android.politicalpreparedness.utils.SingleLiveEvent
+import kotlinx.coroutines.launch
 
-class RepresentativeViewModel(private val repository: ElectionRepository): ViewModel() {
+class RepresentativeViewModel(private val repository: ElectionRepository) : ViewModel() {
     // Establish live data for representatives and address
 
     val line1 = MutableLiveData("")
@@ -20,8 +23,22 @@ class RepresentativeViewModel(private val repository: ElectionRepository): ViewM
 
     val messageInput: SingleLiveEvent<Int> = SingleLiveEvent()
 
+    private val _representatives: MutableLiveData<List<Representative>> = MutableLiveData(listOf())
+    val representatives: LiveData<List<Representative>> = _representatives
+
+    private val _loadingRepresentatives = MutableLiveData(false)
+    val loadingRepresentatives: LiveData<Boolean> = _loadingRepresentatives
+
+    private fun showLoadingRepresentative() {
+        _loadingRepresentatives.value = true
+    }
+
+    private fun hideLoadingRepresentative() {
+        _loadingRepresentatives.value = false
+    }
+
     // Create function get address from geo location
-    fun updateAddressFields(inputAddress: Address){
+    fun updateAddressFields(inputAddress: Address) {
         line1.value = inputAddress.line1
         line2.value = inputAddress.line2.orEmpty()
         city.value = inputAddress.city
@@ -55,10 +72,25 @@ class RepresentativeViewModel(private val repository: ElectionRepository): ViewM
             requireNotNull(zip.value)
         )
         Log.d("RepresentativeViewModel", "Search representatives with address $address")
+        fetchRepresentatives(address)
     }
 
 
     //TODO: Create function to fetch representatives from API from a provided address
+    fun fetchRepresentatives(address: Address) {
+        showLoadingRepresentative()
+        viewModelScope.launch {
+            val result = repository.getRepresentatives(address)
+            if (result.isSuccess) {
+                _representatives.postValue(result.getOrDefault(listOf()))
+            } else {
+                _representatives.postValue(listOf())
+            }
+            Log.d("fetchRepresentatives", "${_representatives.value}")
+
+        }
+        hideLoadingRepresentative()
+    }
 
     /**
      *  The following code will prove helpful in constructing a representative from the API. This code combines the two nodes of the RepresentativeResponse into a single official :

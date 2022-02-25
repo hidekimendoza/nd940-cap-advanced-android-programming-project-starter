@@ -15,7 +15,12 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import com.example.android.politicalpreparedness.R
 import com.example.android.politicalpreparedness.databinding.FragmentRepresentativeBinding
+import com.example.android.politicalpreparedness.generated.callback.OnClickListener
 import com.example.android.politicalpreparedness.network.models.Address
+import com.example.android.politicalpreparedness.network.models.Official
+import com.example.android.politicalpreparedness.representative.adapter.RepresentativeListAdapter
+import com.example.android.politicalpreparedness.representative.adapter.RepresentativeListener
+import com.example.android.politicalpreparedness.representative.model.Representative
 import com.example.android.politicalpreparedness.utils.checkDeviceLocationSettings
 import com.example.android.politicalpreparedness.utils.isPermissionGranted
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -51,18 +56,26 @@ class DetailFragment : Fragment() {
     }
 
 
-    override fun onCreateView(inflater: LayoutInflater,
-                              container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
 
         // Establish bindings
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_representative, container, false)
+        binding =
+            DataBindingUtil.inflate(inflater, R.layout.fragment_representative, container, false)
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
 
 
         binding.state.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
                 viewModel.setState(requireContext().resources.getStringArray(R.array.states)[position])
             }
 
@@ -98,16 +111,29 @@ class DetailFragment : Fragment() {
             viewModel.searchRepresentatives()
         }
 
-        //TODO: Define and assign Representative adapter
+        // Define and assign Representative adapter
+        val adapter = RepresentativeListAdapter(RepresentativeListener { representative ->
+            logRepresentativeClicked(representative)
+        })
 
-        //TODO: Populate Representative adapter
+        viewModel.representatives.observe(viewLifecycleOwner, { representativeList ->
+            adapter.submitList(representativeList)
+        })
+
+        // Populate Representative adapter
+        binding.representativesList.adapter = adapter
+
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
         binding.executePendingBindings()
         return binding.root
     }
 
+    private fun logRepresentativeClicked(representative: Representative) {
+        Log.d("logRepresentativeClicked", "Clicked representative: $representative")
+    }
+
     @SuppressLint("MissingPermission")
-    private fun getDeviceAddress():Unit{
+    private fun getDeviceAddress(): Unit {
         fusedLocationClient.lastLocation.addOnCompleteListener(requireActivity()) { task ->
             if (task.isSuccessful) {
                 val lastKnownLocation = task.result
@@ -147,10 +173,16 @@ class DetailFragment : Fragment() {
     private fun geoCodeLocation(location: Location): Address {
         val geocoder = Geocoder(context, Locale.getDefault())
         return geocoder.getFromLocation(location.latitude, location.longitude, 1)
-                .map { address ->
-                    Address(address.thoroughfare, address.subThoroughfare, address.locality, address.adminArea, address.postalCode)
-                }
-                .first()
+            .map { address ->
+                Address(
+                    address.thoroughfare,
+                    address.subThoroughfare,
+                    address.locality,
+                    address.adminArea,
+                    address.postalCode
+                )
+            }
+            .first()
     }
 
     private fun hideKeyboard() {

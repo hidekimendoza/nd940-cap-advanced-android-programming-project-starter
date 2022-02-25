@@ -5,18 +5,19 @@
 
     <!-- Add data binding node -->
     <data>
+
         <variable
             name="viewModel"
             type="com.example.android.politicalpreparedness.representative.RepresentativeViewModel" />
     </data>
 
     <!-- TODO: Add motion scene to hide form on vertical scroll. -->
-<!--    <androidx.constraintlayout.motion.widget.MotionLayout-->
+    <!--    <androidx.constraintlayout.motion.widget.MotionLayout-->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_height="match_parent"
         android:layout_width="match_parent">
 
-<!--        app:layoutDescription="@xml/fragment_representative_scene">-->
+        <!--        app:layoutDescription="@xml/fragment_representative_scene">-->
 
         <!-- TODO: Add visual styling and content -->
         <TextView
@@ -82,7 +83,7 @@
             app:layout_constraintStart_toEndOf="@id/city"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/city"
-            app:layout_constraintBottom_toBottomOf="@id/city"/>
+            app:layout_constraintBottom_toBottomOf="@id/city" />
 
         <!-- TODO: Add data binding value -->
         <!-- TODO: Add visual styling and content -->
@@ -128,12 +129,14 @@
 
         <!-- TODO: Add Representatives RecyclerView -->
         <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/representatives_list"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/button_location"
+            android:layout_height="0dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintTop_toBottomOf="@id/representative_title"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"/>
+            app:layout_constraintStart_toStartOf="parent" />
 
         <!-- TODO: Add visual styling and content -->
         <TextView
@@ -147,13 +150,18 @@
             app:layout_constraintTop_toBottomOf="@id/representative_title"
             app:layout_constraintBottom_toBottomOf="parent" />
 
-<!--        <ProgressBar android:id="@+id/loading_spinner"-->
-<!--            style="?android:progressBarStyleLarge"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_gravity="center"-->
-<!--            />-->
+        <ProgressBar
+            android:id="@+id/loading_spinner"
+            style="?android:progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            app:setStatusRepresentativesProgressBar="@{viewModel.loadingRepresentatives}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/representative_title"
+            app:layout_constraintTop_toBottomOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-<!--    </androidx.constraintlayout.motion.widget.MotionLayout>-->
+    <!--    </androidx.constraintlayout.motion.widget.MotionLayout>-->
 </layout>

@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="representative"
             type="com.example.android.politicalpreparedness.representative.model.Representative" />
@@ -21,6 +22,7 @@
 
         <ImageView
             android:id="@+id/representativePhoto"
+            profileImage="@{representative.official.photoUrl}"
             android:layout_width="90dp"
             android:layout_height="90dp"
             android:contentDescription="@string/representative_image"
@@ -33,44 +35,44 @@
             android:id="@+id/representativeItemTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="TextView"
+            android:padding="4dp"
+            android:text="@{representative.office.name}"
             android:textColor="@color/gray50"
             android:textSize="18sp"
-            android:padding="4dp"
             android:textStyle="bold"
-            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toEndOf="@id/representativePhoto"
+            app:layout_constraintTop_toTopOf="parent"
             tools:text="President of the United States" />
 
         <TextView
             android:id="@+id/representativeItemName"
+            style="@style/representative_info"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="TextView"
+            android:text="@{representative.official.name}"
             android:textColor="@color/gray50"
-            app:layout_constraintTop_toBottomOf="@id/representativeItemTitle"
             app:layout_constraintStart_toStartOf="@id/representativeItemTitle"
-            tools:text="Donald J. Trump"
-            style="@style/representative_info" />
+            app:layout_constraintTop_toBottomOf="@id/representativeItemTitle"
+            tools:text="Donald J. Trump" />
 
 
         <TextView
             android:id="@+id/representativeItemParty"
+            style="@style/representative_info"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="TextView"
-            style="@style/representative_info"
-            app:layout_constraintTop_toBottomOf="@id/representativeItemName"
+            android:text="@{representative.official.party}"
             app:layout_constraintStart_toStartOf="@id/representativeItemName"
+            app:layout_constraintTop_toBottomOf="@id/representativeItemName"
             tools:text="Republican Party" />
 
         <ImageView
             android:id="@+id/facebookIcon"
+            style="@style/link_style"
             android:contentDescription="@string/representative_www_link"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/wwwIcon"
-            app:srcCompat="@drawable/ic_www"
-            style="@style/link_style" />
+            app:srcCompat="@drawable/ic_facebook" />
 
         <ImageView
             android:id="@+id/twitterIcon"
@@ -86,7 +88,7 @@
             android:contentDescription="@string/representative_fb_link"
             app:layout_constraintBottom_toBottomOf="@id/facebookIcon"
             app:layout_constraintEnd_toStartOf="@id/twitterIcon"
-            app:srcCompat="@drawable/ic_facebook" />
+            app:srcCompat="@drawable/ic_www" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

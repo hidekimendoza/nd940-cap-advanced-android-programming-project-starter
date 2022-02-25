@@ -7,6 +7,7 @@ import com.example.android.politicalpreparedness.election.domain.ElectionDomainM
 import com.example.android.politicalpreparedness.network.CivicsApi
 import com.example.android.politicalpreparedness.network.CivicsApiService
 import com.example.android.politicalpreparedness.network.models.*
+import com.example.android.politicalpreparedness.representative.model.Representative
 import com.example.android.politicalpreparedness.source.ElectionDataSource
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
@@ -20,6 +21,21 @@ class RemoteElectionDataSource(
     private val _upcomingElections: MutableLiveData<Result<List<ElectionDomainModel>>> = MutableLiveData()
 
     private val _electionDetails: MutableLiveData<Result<VoterInfo>> = MutableLiveData()
+
+    suspend fun getRepresentativesFromLocation(address: Address): Result<List<Representative>>{
+        return withContext(ioDispatcher) {
+            val result: Result<List<Representative>> = try {
+                val (offices, officials) = apiService.getRepresentatives(address.toFormattedString())
+                val unifiedResponse = offices.flatMap { office -> office.getRepresentatives(officials) }
+                Log.d("getRepresentativesFromLocation", "$unifiedResponse")
+                Result.success(unifiedResponse)
+            }
+            catch (ex: java.lang.Exception){
+                Result.failure(RuntimeException("Unable to get representatives from network"))
+            }
+            result
+        }
+    }
 
     override suspend fun getElections(): Result<List<ElectionDomainModel>> {
         return withContext(ioDispatcher){
