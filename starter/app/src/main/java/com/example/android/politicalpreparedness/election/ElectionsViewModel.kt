@@ -3,7 +3,6 @@ package com.example.android.politicalpreparedness.election
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.*
-import com.example.android.politicalpreparedness.database.ElectionDatabase
 import com.example.android.politicalpreparedness.election.domain.ElectionDomainModel
 import com.example.android.politicalpreparedness.repository.ElectionRepository
 import kotlinx.coroutines.launch
@@ -28,7 +27,7 @@ class ElectionsViewModel(val app:Application, private val electionRepository: El
 //    }
 
 
-    val upcomingElections: LiveData<List<ElectionDomainModel>> = Transformations.map(electionRepository.elections){ it ->
+    val upcomingElections: LiveData<List<ElectionDomainModel>> = Transformations.map(electionRepository.elections){
         if(it.isSuccess){
             it.getOrDefault(defaultValue = listOf())
         }

@@ -57,11 +57,11 @@ class ElectionsFragment : Fragment() {
 
 
         // Link elections to voter info
-        viewModel.upcomingElections.observe(viewLifecycleOwner, Observer { electionList ->
+        viewModel.upcomingElections.observe(viewLifecycleOwner, { electionList ->
             upcomingAdapter.submitList(electionList)
         })
 
-        viewModel.savedElections.observe(viewLifecycleOwner, Observer { electionList ->
+        viewModel.savedElections.observe(viewLifecycleOwner, { electionList ->
             savedAdapter.submitList(electionList)
         })
 

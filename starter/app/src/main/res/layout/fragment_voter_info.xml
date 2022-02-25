@@ -46,7 +46,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="20dp"
-            android:text="Election information"
+            android:text="@string/election_information"
             android:textColor="@color/gray50"
             android:textSize="14sp"
             android:textStyle="bold|italic"
@@ -60,7 +60,7 @@
             style="@style/ElectionField"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="State locations"
+            android:text="@string/state_locations"
             app:layout_constraintStart_toStartOf="@id/election_date"
             app:layout_constraintTop_toBottomOf="@id/state_header"
             tools:text="State locations" />
@@ -72,7 +72,7 @@
             style="@style/ElectionField"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="State ballot"
+            android:text="@string/state_ballot"
             app:layout_constraintStart_toStartOf="@id/election_date"
             app:layout_constraintTop_toBottomOf="@id/state_locations"
             tools:text="State ballot" />

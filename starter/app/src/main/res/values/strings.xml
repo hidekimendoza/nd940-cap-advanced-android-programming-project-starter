@@ -23,6 +23,9 @@
     <string name="error_missing_city">Error, missing city</string>
     <string name="error_missing_state">Error, missing state</string>
     <string name="error_missing_zip">Error, missing zip code</string>
+    <string name="election_information">Election information</string>
+    <string name="state_locations">State locations</string>
+    <string name="state_ballot">State ballot</string>
 
     <!-- TODO: Add necessary string values -->
 

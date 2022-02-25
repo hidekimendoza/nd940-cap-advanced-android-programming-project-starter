@@ -1,6 +1,5 @@
 package com.example.android.politicalpreparedness.launch
 
-import android.app.Application
 import android.os.Bundle
 import androidx.fragment.app.testing.launchFragmentInContainer
 import androidx.navigation.NavController
@@ -10,19 +9,15 @@ import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.filters.MediumTest
-import androidx.test.rule.ActivityTestRule
 import androidx.test.runner.AndroidJUnit4
-import com.example.android.politicalpreparedness.MainActivity
 import com.example.android.politicalpreparedness.R
-import com.udacity.project4.util.DataBindingIdlingResource
-import com.udacity.project4.util.monitorActivity
-import com.udacity.project4.util.monitorFragment
+import com.example.android.politicalpreparedness.util.DataBindingIdlingResource
+import com.example.android.politicalpreparedness.util.monitorFragment
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.After
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mockito.mock

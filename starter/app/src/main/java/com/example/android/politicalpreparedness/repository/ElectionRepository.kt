@@ -8,7 +8,7 @@ import com.example.android.politicalpreparedness.network.models.VoterInfo
 import com.example.android.politicalpreparedness.representative.model.Representative
 import com.example.android.politicalpreparedness.source.local.LocalElectionDataSource
 import com.example.android.politicalpreparedness.source.remote.RemoteElectionDataSource
-import com.udacity.project4.utils.wrapEspressoIdlingResource
+import com.example.android.politicalpreparedness.utils.wrapEspressoIdlingResource
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext

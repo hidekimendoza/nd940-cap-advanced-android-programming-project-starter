@@ -1,4 +1,4 @@
-package com.udacity.project4.utils
+package com.example.android.politicalpreparedness.utils
 
 import androidx.test.espresso.idling.CountingIdlingResource
 

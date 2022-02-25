@@ -76,8 +76,8 @@ class RepresentativeViewModel(private val repository: ElectionRepository) : View
     }
 
 
-    //TODO: Create function to fetch representatives from API from a provided address
-    fun fetchRepresentatives(address: Address) {
+    // Create function to fetch representatives from API from a provided address
+    private fun fetchRepresentatives(address: Address) {
         showLoadingRepresentative()
         viewModelScope.launch {
             val result = repository.getRepresentatives(address)

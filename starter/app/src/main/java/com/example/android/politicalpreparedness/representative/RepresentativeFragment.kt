@@ -7,7 +7,9 @@ import android.location.Geocoder
 import android.location.Location
 import android.os.Bundle
 import android.util.Log
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.AdapterView
 import androidx.activity.result.contract.ActivityResultContracts
@@ -15,9 +17,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import com.example.android.politicalpreparedness.R
 import com.example.android.politicalpreparedness.databinding.FragmentRepresentativeBinding
-import com.example.android.politicalpreparedness.generated.callback.OnClickListener
 import com.example.android.politicalpreparedness.network.models.Address
-import com.example.android.politicalpreparedness.network.models.Official
 import com.example.android.politicalpreparedness.representative.adapter.RepresentativeListAdapter
 import com.example.android.politicalpreparedness.representative.adapter.RepresentativeListener
 import com.example.android.politicalpreparedness.representative.model.Representative
@@ -26,8 +26,8 @@ import com.example.android.politicalpreparedness.utils.isPermissionGranted
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.material.snackbar.Snackbar
-import java.util.Locale
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.util.*
 
 class DetailFragment : Fragment() {
 

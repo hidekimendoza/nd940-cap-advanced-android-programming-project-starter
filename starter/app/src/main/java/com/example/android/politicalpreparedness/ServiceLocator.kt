@@ -1,12 +1,5 @@
 package com.example.android.politicalpreparedness
 
-import android.content.Context
-import androidx.annotation.VisibleForTesting
-import androidx.room.Room
-import com.example.android.politicalpreparedness.database.ElectionDatabase
-import com.example.android.politicalpreparedness.repository.ElectionRepository
-import kotlinx.coroutines.runBlocking
-
 object ServiceLocator {
 //
 //    private val lock = Any()

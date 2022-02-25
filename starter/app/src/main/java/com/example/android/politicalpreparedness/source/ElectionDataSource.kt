@@ -2,7 +2,6 @@ package com.example.android.politicalpreparedness.source
 
 import androidx.lifecycle.LiveData
 import com.example.android.politicalpreparedness.election.domain.ElectionDomainModel
-import kotlinx.coroutines.withContext
 
 interface ElectionDataSource {
     suspend fun getElections(): Result<List<ElectionDomainModel>>

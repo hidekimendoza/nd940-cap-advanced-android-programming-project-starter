@@ -1,14 +1,12 @@
-package com.udacity.project4.utils
+package com.example.android.politicalpreparedness.utils
 
 
-import android.util.Log
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.android.politicalpreparedness.election.adapter.ElectionListAdapter
 import com.example.android.politicalpreparedness.election.domain.ElectionDomainModel
-import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
 

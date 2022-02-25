@@ -4,14 +4,14 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.android.politicalpreparedness.election.domain.ElectionDomainModel
-import com.example.android.politicalpreparedness.network.CivicsApi
 import com.example.android.politicalpreparedness.network.CivicsApiService
-import com.example.android.politicalpreparedness.network.models.*
+import com.example.android.politicalpreparedness.network.models.Address
+import com.example.android.politicalpreparedness.network.models.VoterInfo
+import com.example.android.politicalpreparedness.network.models.asDomainModel
 import com.example.android.politicalpreparedness.representative.model.Representative
 import com.example.android.politicalpreparedness.source.ElectionDataSource
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
-import java.lang.RuntimeException
 
 class RemoteElectionDataSource(
     private val apiService: CivicsApiService,
