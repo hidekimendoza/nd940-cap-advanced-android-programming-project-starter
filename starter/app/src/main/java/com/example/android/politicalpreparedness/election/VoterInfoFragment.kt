@@ -2,7 +2,9 @@ package com.example.android.politicalpreparedness.election
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Intent
+import android.content.IntentSender
 import android.location.Address
 import android.location.Geocoder
 import android.net.Uri
@@ -16,10 +18,13 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import com.example.android.politicalpreparedness.R
 import com.example.android.politicalpreparedness.databinding.FragmentVoterInfoBinding
-import com.example.android.politicalpreparedness.utils.checkDeviceLocationSettings
+import com.example.android.politicalpreparedness.utils.REQUEST_TURN_DEVICE_LOCATION_ON
 import com.example.android.politicalpreparedness.utils.isPermissionGranted
+import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.LocationSettingsRequest
 import com.google.android.material.snackbar.Snackbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -123,7 +128,7 @@ class VoterInfoFragment : Fragment() {
         //// Before you perform the actual permission request, check whether your app
         //// already has the permissions, and whether your app needs to show a permission
         //// rationale dialog. For more details, see Request permissions.
-        checkDeviceLocationSettings(requireActivity(), { getLastDeviceLocation() })
+        checkDeviceLocationSettings({ getLastDeviceLocation() })
         if (isPermissionGranted(requireContext())) {
             Log.d("onCreateView", "Permissions granted")
             getLastDeviceLocation()
@@ -188,4 +193,39 @@ class VoterInfoFragment : Fragment() {
         intent.data = Uri.parse(url)
         startActivity(intent)
     }
+
+
+    fun checkDeviceLocationSettings(
+        myfunc: () -> Unit,
+        resolve: Boolean = true) : Boolean{
+        val locationRequest = LocationRequest.create().apply {
+            priority = LocationRequest.PRIORITY_LOW_POWER
+        }
+        val builder = LocationSettingsRequest.Builder().addLocationRequest(locationRequest)
+        val settingsClient = LocationServices.getSettingsClient(requireActivity())
+        val locationSettingsResponseTask =
+            settingsClient.checkLocationSettings(builder.build())
+        locationSettingsResponseTask.addOnFailureListener { exception ->
+            if (exception is ResolvableApiException && resolve) {
+                try {
+                    exception.startResolutionForResult(
+                        requireActivity(),
+                        REQUEST_TURN_DEVICE_LOCATION_ON
+                    )
+                } catch (sendEx: IntentSender.SendIntentException) {
+                    Log.d(TAG, "Error getting location settings resolution: " + sendEx.message)
+                }
+            } else {
+                Log.d("checkDeviceLocationSettings", "Device location is off, required to turn on")
+                Snackbar.make(binding.root, R.string.turn_on_location_error_msg, Snackbar.LENGTH_LONG).show()            }
+        }
+        locationSettingsResponseTask.addOnCompleteListener {
+            if (it.isSuccessful) {
+                Log.d("checkDeviceLocationSettings", "Succeeded Device location is ON")
+                myfunc()
+            }
+        }
+        return true
+    }
+
 }

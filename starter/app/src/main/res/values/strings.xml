@@ -15,6 +15,7 @@
     <string name="address_line_2">Address Line 2</string>
     <string name="city">City</string>
     <string name="zip">Zip</string>
+    <string name="turn_on_location_error_msg">Device location is OFF, turn it on to get voter detailed data</string>
     <string name="representative_image">Representative image</string>
     <string name="representative_www_link">representative www link</string>
     <string name="representative_fb_link">representative fb link</string>

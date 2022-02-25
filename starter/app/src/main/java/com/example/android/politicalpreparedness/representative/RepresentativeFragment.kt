@@ -2,7 +2,9 @@ package com.example.android.politicalpreparedness.representative
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
+import android.content.IntentSender
 import android.location.Geocoder
 import android.location.Location
 import android.os.Bundle
@@ -17,14 +19,18 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import com.example.android.politicalpreparedness.R
 import com.example.android.politicalpreparedness.databinding.FragmentRepresentativeBinding
+import com.example.android.politicalpreparedness.election.TAG
 import com.example.android.politicalpreparedness.network.models.Address
 import com.example.android.politicalpreparedness.representative.adapter.RepresentativeListAdapter
 import com.example.android.politicalpreparedness.representative.adapter.RepresentativeListener
 import com.example.android.politicalpreparedness.representative.model.Representative
-import com.example.android.politicalpreparedness.utils.checkDeviceLocationSettings
+import com.example.android.politicalpreparedness.utils.REQUEST_TURN_DEVICE_LOCATION_ON
 import com.example.android.politicalpreparedness.utils.isPermissionGranted
+import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.LocationSettingsRequest
 import com.google.android.material.snackbar.Snackbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
@@ -85,17 +91,19 @@ class DetailFragment : Fragment() {
 
         // Establish button listeners for field and location search
         binding.buttonLocation.setOnClickListener {
-            checkDeviceLocationSettings(requireActivity(), { getDeviceAddress() })
+            checkDeviceLocationSettings( { getDeviceAddress() })
             if (isPermissionGranted(requireContext())) {
                 Log.d("onCreateView", "Permissions granted")
                 getDeviceAddress()
             } else {
+                showSnackbar("Device location is OFF, turn it on to get voter detailed data")
                 locationPermissionRequest.launch(
                     arrayOf(
                         Manifest.permission.ACCESS_FINE_LOCATION,
                         Manifest.permission.ACCESS_COARSE_LOCATION
                     )
                 )
+
             }
         }
 
@@ -189,5 +197,48 @@ class DetailFragment : Fragment() {
         val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(requireView().windowToken, 0)
     }
+
+
+    fun checkDeviceLocationSettings(
+        myfunc: () -> Unit,
+        resolve: Boolean = true) : Boolean{
+        val locationRequest = LocationRequest.create().apply {
+            priority = LocationRequest.PRIORITY_LOW_POWER
+        }
+        val builder = LocationSettingsRequest.Builder().addLocationRequest(locationRequest)
+        val settingsClient = LocationServices.getSettingsClient(requireActivity())
+        val locationSettingsResponseTask =
+            settingsClient.checkLocationSettings(builder.build())
+        locationSettingsResponseTask.addOnFailureListener { exception ->
+            if (exception is ResolvableApiException && resolve-) {
+                try {
+                    startIntentSenderForResult(
+                        exception.resolution.intentSender,
+                        REQUEST_TURN_DEVICE_LOCATION_ON,
+                        null,
+                        0,
+                        0,
+                        0,
+                        null
+                    )
+                } catch (sendEx: IntentSender.SendIntentException) {
+                    Log.d(TAG, "Error getting location settings resolution: " + sendEx.message)
+                }
+            } else {
+                Log.d("checkDeviceLocationSettings", "Device location is off, required to turn on")
+                Snackbar.make(binding.root, R.string.turn_on_location_error_msg, Snackbar.LENGTH_LONG).setAction(android.R.string.ok) {
+                    myfunc()
+                }.show()
+            }
+        }
+        locationSettingsResponseTask.addOnCompleteListener {
+            if (it.isSuccessful) {
+                Log.d("checkDeviceLocationSettings", "Succeeded Device location is ON")
+                myfunc()
+            }
+        }
+        return true
+    }
+
 
 }
