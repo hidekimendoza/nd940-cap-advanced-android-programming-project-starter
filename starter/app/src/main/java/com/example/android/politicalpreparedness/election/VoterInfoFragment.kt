@@ -99,7 +99,12 @@ class VoterInfoFragment : Fragment() {
         }
         viewModel.getElectionMainInfo(args.argElectionId)
 
-
+        viewModel.errorMessage.observe(viewLifecycleOwner) {
+            it?.let {
+                Log.i("VoterInfoFragment", "Failed to get voter info data: ${getString(it)}")
+                showSnackbar(getString(it))
+            }
+        }
         // Handle save button UI state
         // cont'd Handle save button clicks
         binding.saveElectionButton.setOnClickListener {
@@ -144,7 +149,7 @@ class VoterInfoFragment : Fragment() {
     }
 
     @SuppressLint("MissingPermission")
-    private fun getLastDeviceLocation():Unit{
+    private fun getLastDeviceLocation(): Unit {
         var address: Address? = null
         fusedLocationClient.lastLocation.addOnCompleteListener(requireActivity()) { task ->
             if (task.isSuccessful) {
@@ -197,7 +202,8 @@ class VoterInfoFragment : Fragment() {
 
     fun checkDeviceLocationSettings(
         myfunc: () -> Unit,
-        resolve: Boolean = true) : Boolean{
+        resolve: Boolean = true
+    ): Boolean {
         val locationRequest = LocationRequest.create().apply {
             priority = LocationRequest.PRIORITY_LOW_POWER
         }
@@ -217,7 +223,12 @@ class VoterInfoFragment : Fragment() {
                 }
             } else {
                 Log.d("checkDeviceLocationSettings", "Device location is off, required to turn on")
-                Snackbar.make(binding.root, R.string.turn_on_location_error_msg, Snackbar.LENGTH_LONG).show()            }
+                Snackbar.make(
+                    binding.root,
+                    R.string.turn_on_location_error_msg,
+                    Snackbar.LENGTH_LONG
+                ).show()
+            }
         }
         locationSettingsResponseTask.addOnCompleteListener {
             if (it.isSuccessful) {

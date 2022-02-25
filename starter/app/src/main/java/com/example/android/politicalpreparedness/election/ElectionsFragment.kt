@@ -14,6 +14,7 @@ import com.example.android.politicalpreparedness.databinding.FragmentElectionBin
 import com.example.android.politicalpreparedness.election.adapter.ElectionListAdapter
 import com.example.android.politicalpreparedness.election.adapter.ElectionListener
 import com.example.android.politicalpreparedness.election.domain.ElectionDomainModel
+import com.google.android.material.snackbar.Snackbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -65,6 +66,12 @@ class ElectionsFragment : Fragment() {
             savedAdapter.submitList(electionList)
         })
 
+        viewModel.errorMessage.observe(viewLifecycleOwner) {
+            it?.let {
+                Log.i("DetailFragment", "Missing address input data: ${getString(it)}")
+                Snackbar.make(binding.root, getString(it), Snackbar.LENGTH_SHORT47).show()
+            }
+        }
 
         // Populate recycler adapters
         binding.upcomingElementRview.adapter = upcomingAdapter

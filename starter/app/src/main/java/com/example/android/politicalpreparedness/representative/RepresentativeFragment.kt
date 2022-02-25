@@ -210,7 +210,7 @@ class DetailFragment : Fragment() {
         val locationSettingsResponseTask =
             settingsClient.checkLocationSettings(builder.build())
         locationSettingsResponseTask.addOnFailureListener { exception ->
-            if (exception is ResolvableApiException && resolve-) {
+            if (exception is ResolvableApiException && resolve) {
                 try {
                     startIntentSenderForResult(
                         exception.resolution.intentSender,

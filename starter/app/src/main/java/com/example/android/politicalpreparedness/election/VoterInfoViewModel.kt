@@ -6,9 +6,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.android.politicalpreparedness.R
 import com.example.android.politicalpreparedness.election.domain.ElectionDomainModel
 import com.example.android.politicalpreparedness.network.models.VoterInfo
 import com.example.android.politicalpreparedness.repository.ElectionRepository
+import com.example.android.politicalpreparedness.utils.SingleLiveEvent
 import kotlinx.coroutines.launch
 
 class VoterInfoViewModel(private val repository: ElectionRepository) : ViewModel() {
@@ -19,6 +21,9 @@ class VoterInfoViewModel(private val repository: ElectionRepository) : ViewModel
 
     private var electionId: Int? = null
     var election = MutableLiveData<ElectionDomainModel?>(null)
+
+    val errorMessage: SingleLiveEvent<Int> = SingleLiveEvent()
+
 
     fun getElectionMainInfo(id: Int) {
         electionId = id
@@ -60,16 +65,10 @@ class VoterInfoViewModel(private val repository: ElectionRepository) : ViewModel
      * Hint: The saved state can be accomplished in multiple ways. It is directly related to how elections are saved/removed from the database.
      */
 
-    //TODO: Add var and methods to populate voter info
+    // Add var and methods to populate voter info
     fun getVoterInfo(address: Address) {
         if (electionId != null) {
             viewModelScope.launch {
-//                val addressDM = com.example.android.politicalpreparedness.network.models.Address(
-//                    line1 = "${address.featureName} ${address.thoroughfare}",
-//                    line2 = null,
-//                    city = address.locality,
-//                    state = address.adminArea,
-//                    zip = address.postalCode)
                 Log.d("VoterInfoViewModel", "getVoterInfo address:${address.getAddressLine(0)}")
 
                 val result = repository.getElectionDetailsFromNetwork(
@@ -82,6 +81,7 @@ class VoterInfoViewModel(private val repository: ElectionRepository) : ViewModel
                     _voterInfo.value = result.getOrNull()
                 } else {
                     Log.d("VoterInfoViewModel", "getVoterInfo Failed")
+                    errorMessage.value = R.string.error_msg_fail_voter_info_check_network
                     _voterInfo.value = null
                 }
             }

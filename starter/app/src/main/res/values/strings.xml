@@ -27,6 +27,9 @@
     <string name="election_information">Election information</string>
     <string name="state_locations">State locations</string>
     <string name="state_ballot">State ballot</string>
+    <string name="error_msg_fail_voter_info_check_network">Failed to get voter info, check network connection</string>
+    <string name="error_fetch_representatives_network">Failed to get representatives, Check network connection</string>
+    <string name="error_get_election_list_network">Unable to refresh election list from network</string>
 
     <!-- TODO: Add necessary string values -->
 

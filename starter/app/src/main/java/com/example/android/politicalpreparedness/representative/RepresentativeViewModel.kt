@@ -85,6 +85,7 @@ class RepresentativeViewModel(private val repository: ElectionRepository) : View
                 _representatives.postValue(result.getOrDefault(listOf()))
             } else {
                 _representatives.postValue(listOf())
+                messageInput.value = R.string.error_fetch_representatives_network
             }
             Log.d("fetchRepresentatives", "${_representatives.value}")
 
