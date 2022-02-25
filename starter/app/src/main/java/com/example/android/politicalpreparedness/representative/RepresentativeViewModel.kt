@@ -22,6 +22,7 @@ class RepresentativeViewModel(private val repository: ElectionRepository) : View
     val zip = MutableLiveData("")
 
     val messageInput: SingleLiveEvent<Int> = SingleLiveEvent()
+    val messageError: SingleLiveEvent<String> = SingleLiveEvent()
 
     private val _representatives: MutableLiveData<List<Representative>> = MutableLiveData(listOf())
     val representatives: LiveData<List<Representative>> = _representatives
@@ -85,7 +86,7 @@ class RepresentativeViewModel(private val repository: ElectionRepository) : View
                 _representatives.postValue(result.getOrDefault(listOf()))
             } else {
                 _representatives.postValue(listOf())
-                messageInput.value = R.string.error_fetch_representatives_network
+                messageError.value = result.exceptionOrNull()?.message
             }
             Log.d("fetchRepresentatives", "${_representatives.value}")
 

@@ -114,6 +114,13 @@ class DetailFragment : Fragment() {
             }
         }
 
+        viewModel.messageError.observe(viewLifecycleOwner) {
+            it?.let {
+                Log.i("DetailFragment", "Unable to get representatives ${it}")
+                showSnackbar(it)
+            }
+        }
+
         binding.buttonSearch.setOnClickListener {
             binding.executePendingBindings()
             viewModel.searchRepresentatives()

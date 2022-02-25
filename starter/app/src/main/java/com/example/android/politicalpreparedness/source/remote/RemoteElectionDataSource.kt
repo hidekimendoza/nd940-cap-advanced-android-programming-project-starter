@@ -31,7 +31,7 @@ class RemoteElectionDataSource(
                 Result.success(unifiedResponse)
             }
             catch (ex: java.lang.Exception){
-                Result.failure(RuntimeException("Unable to get representatives from network"))
+                Result.failure(RuntimeException("Unable to get representatives due to: ${ex.message}"))
             }
             result
         }
