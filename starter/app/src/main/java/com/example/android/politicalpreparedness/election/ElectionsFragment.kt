@@ -91,5 +91,4 @@ class ElectionsFragment : Fragment() {
         )
     }
 
-    //TODO: Refresh adapters when fragment loads
 }

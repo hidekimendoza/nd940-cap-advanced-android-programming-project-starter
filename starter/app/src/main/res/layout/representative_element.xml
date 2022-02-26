@@ -17,32 +17,26 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:layout_margin="8dp">
+        style="@style/rep_element_style">
 
         <ImageView
             android:id="@+id/representativePhoto"
             profileImage="@{representative.official.photoUrl}"
-            android:layout_width="90dp"
-            android:layout_height="90dp"
             android:contentDescription="@string/representative_image"
-            android:padding="4dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_profile" />
+            app:srcCompat="@drawable/ic_profile"
+            style="@style/rep_pp_size" />
 
         <TextView
             android:id="@+id/representativeItemTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="4dp"
             android:text="@{representative.office.name}"
-            android:textColor="@color/gray50"
-            android:textSize="18sp"
-            android:textStyle="bold"
             app:layout_constraintStart_toEndOf="@id/representativePhoto"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="President of the United States" />
+            tools:text="President of the United States"
+            style="@style/rep_item_title" />
 
         <TextView
             android:id="@+id/representativeItemName"

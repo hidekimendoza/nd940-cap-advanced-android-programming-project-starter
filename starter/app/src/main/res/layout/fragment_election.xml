@@ -14,7 +14,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="8dp"
+        android:padding="@dimen/medium_space"
         tools:context="com.example.android.politicalpreparedness.MainActivity">
 
         <!-- Add Upcoming Election Recycler and Header -->
@@ -34,7 +34,7 @@
                 style="@style/UpcomingElectionHeader"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingBottom="8dp"
+                android:paddingBottom="@dimen/medium_space"
                 android:text="@string/upcoming_elections" />
 
             <androidx.recyclerview.widget.RecyclerView
@@ -70,7 +70,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:orientation="vertical"
-            android:paddingTop="8dp"
+            android:paddingTop="@dimen/medium_space"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -81,7 +81,7 @@
                 style="@style/UpcomingElectionHeader"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingBottom="8dp"
+                android:paddingBottom="@dimen/medium_space"
                 android:text="@string/saved_elections" />
 
             <androidx.recyclerview.widget.RecyclerView

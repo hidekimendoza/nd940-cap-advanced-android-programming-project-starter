@@ -87,11 +87,11 @@
             android:layout_height="wrap_content"
             android:hint="@string/zip"
             android:inputType="number"
-            android:maxLength="5"
             android:text='@={viewModel.zip}'
             app:layout_constraintEnd_toEndOf="@id/city"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/city" />
+            app:layout_constraintTop_toBottomOf="@id/city"
+            style="@style/zip_code_length" />
 
         <!-- Add visual styling and label -->
         <Button

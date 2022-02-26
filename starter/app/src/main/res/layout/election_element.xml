@@ -19,7 +19,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="4dp"
+        android:layout_margin="@dimen/small_margin"
         android:orientation="vertical"
         android:onClick="@{() -> clickListener.onClick(election)}"
         >
@@ -28,9 +28,9 @@
             android:id="@+id/election_element_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="4dp"
+            android:layout_marginBottom="@dimen/small_margin"
             android:text="@{election.name}"
-            android:textSize="14sp"
+            android:textSize="@dimen/election_element_title_size"
             android:textStyle="bold"
             tools:text="VIP test election" />
 
@@ -40,7 +40,7 @@
             android:layout_height="wrap_content"
             app:electionDate="@{election.electionDay}"
 
-            android:textSize="12sp"
+            android:textSize="@dimen/election_date_font_size"
             tools:text="Sun Jun 06 00:00:00 EDT 2021" />
     </LinearLayout>
 </layout>

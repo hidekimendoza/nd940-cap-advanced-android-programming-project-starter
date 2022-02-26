@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Add necessary string values -->
     <string name="app_name">Political Preparedness</string>
     <string name="upcoming_elections">Upcoming Elections</string>
     <string name="saved_elections">Saved Elections</string>
@@ -30,7 +31,5 @@
     <string name="error_msg_fail_voter_info_check_network">Failed to get voter info, check network connection</string>
     <string name="error_fetch_representatives_network">Failed to get representatives, Check network connection</string>
     <string name="error_get_election_list_network">Unable to refresh election list from network</string>
-
-    <!-- TODO: Add necessary string values -->
 
 </resources>

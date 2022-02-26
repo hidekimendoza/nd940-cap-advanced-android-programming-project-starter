@@ -44,6 +44,8 @@ class ElectionsViewModel(val app: Application, private val electionRepository: E
         loadElections()
     }
 
+    // Create val and functions to populate live data for upcoming elections from the API and saved elections from local database
+
     fun loadElections() {
         isLoadingDB.value = true
         viewModelScope.launch {
@@ -53,7 +55,5 @@ class ElectionsViewModel(val app: Application, private val electionRepository: E
         isLoadingDB.value = false
 
     }
-    //TODO: Create val and functions to populate live data for upcoming elections from the API and saved elections from local database
 
-    //TODO: Create functions to navigate to saved or upcoming election voter info
 }

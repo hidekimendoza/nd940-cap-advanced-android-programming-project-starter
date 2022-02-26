@@ -22,9 +22,9 @@
             android:id="@+id/election_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/default_padding"
+            android:padding="@dimen/medium_space"
             android:singleLine="true"
-            android:textSize="24sp"
+            android:textSize="@dimen/vi_election_name_size"
             app:layout_constraintTop_toTopOf="parent"
             app:title='@{viewModel.election != null ? viewModel.election.name.toString() : "Unknown"}'
             tools:text="Election Name" />
@@ -34,7 +34,7 @@
             android:id="@+id/election_date"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/default_padding"
+            android:layout_margin="@dimen/medium_space"
             android:text='@{viewModel.election != null ? viewModel.election.electionDay.toString() : "Unknown"}'
             app:layout_constraintTop_toBottomOf="@id/election_name"
             tools:text="12 November 2055" />
@@ -44,14 +44,10 @@
             android:id="@+id/state_header"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="20dp"
             android:text="@string/election_information"
-            android:textColor="@color/gray50"
-            android:textSize="14sp"
-            android:textStyle="bold|italic"
             app:layout_constraintStart_toStartOf="@id/election_date"
-            app:layout_constraintTop_toBottomOf="@id/election_date" />
+            app:layout_constraintTop_toBottomOf="@id/election_date"
+            style="@style/vi_header" />
 
         <!-- Add click binding to open web URL -->
         <!-- Add visual styling and content -->
