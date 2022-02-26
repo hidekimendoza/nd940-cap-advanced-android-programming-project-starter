@@ -11,7 +11,7 @@ import com.example.android.politicalpreparedness.R
 
 @BindingAdapter("profileImage")
 fun fetchImage(view: ImageView, src: String?) {
-    src?.let {
+    if(src != null) {
         val uri = src.toUri().buildUpon().scheme("https").build()
         // Add Glide call to load image and circle crop - user ic_profile as a placeholder and for errors.
         Glide.with(view.context)

@@ -7,6 +7,8 @@ import android.content.Context
 import android.content.IntentSender
 import android.location.Geocoder
 import android.location.Location
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -15,6 +17,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.AdapterView
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import com.example.android.politicalpreparedness.R
@@ -34,6 +37,8 @@ import com.google.android.gms.location.LocationSettingsRequest
 import com.google.android.material.snackbar.Snackbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
+
+const val ANIMATION_STATE = "animation_state"
 
 class DetailFragment : Fragment() {
 
@@ -61,6 +66,10 @@ class DetailFragment : Fragment() {
         }
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt(ANIMATION_STATE, binding.animation.currentState)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -74,6 +83,11 @@ class DetailFragment : Fragment() {
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
 
+        if (savedInstanceState != null) {
+            val animation_state = savedInstanceState.getInt(ANIMATION_STATE, 0)
+            // Recover animation state
+            binding.animation.transitionToState(animation_state)
+        }
 
         binding.state.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
@@ -91,7 +105,7 @@ class DetailFragment : Fragment() {
 
         // Establish button listeners for field and location search
         binding.buttonLocation.setOnClickListener {
-            checkDeviceLocationSettings( { getDeviceAddress() })
+            checkDeviceLocationSettings({ getDeviceAddress() })
             if (isPermissionGranted(requireContext())) {
                 Log.d("onCreateView", "Permissions granted")
                 getDeviceAddress()
@@ -205,10 +219,10 @@ class DetailFragment : Fragment() {
         imm.hideSoftInputFromWindow(requireView().windowToken, 0)
     }
 
-
     fun checkDeviceLocationSettings(
         myfunc: () -> Unit,
-        resolve: Boolean = true) : Boolean{
+        resolve: Boolean = true
+    ): Boolean {
         val locationRequest = LocationRequest.create().apply {
             priority = LocationRequest.PRIORITY_LOW_POWER
         }
@@ -233,7 +247,11 @@ class DetailFragment : Fragment() {
                 }
             } else {
                 Log.d("checkDeviceLocationSettings", "Device location is off, required to turn on")
-                Snackbar.make(binding.root, R.string.turn_on_location_error_msg, Snackbar.LENGTH_LONG).setAction(android.R.string.ok) {
+                Snackbar.make(
+                    binding.root,
+                    R.string.turn_on_location_error_msg,
+                    Snackbar.LENGTH_LONG
+                ).setAction(android.R.string.ok) {
                     myfunc()
                 }.show()
             }

@@ -16,7 +16,7 @@
             type="com.example.android.politicalpreparedness.election.adapter.ElectionListener" />
     </data>
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/small_margin"
@@ -32,6 +32,8 @@
             android:text="@{election.name}"
             android:textSize="@dimen/election_element_title_size"
             android:textStyle="bold"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             tools:text="VIP test election" />
 
         <TextView
@@ -39,8 +41,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:electionDate="@{election.electionDay}"
-
+            app:layout_constraintTop_toBottomOf="@id/election_element_title"
+            app:layout_constraintStart_toStartOf="parent"
             android:textSize="@dimen/election_date_font_size"
             tools:text="Sun Jun 06 00:00:00 EDT 2021" />
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
