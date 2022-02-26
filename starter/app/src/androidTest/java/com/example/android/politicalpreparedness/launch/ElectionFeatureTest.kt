@@ -33,16 +33,16 @@ class ElectionFeatureTest {
         assertDisplayed("Political Preparedness")
     }
 
-    @Test
-    fun upcomingElectionCheck(){
-        onView(withId(R.id.buttonUpcomingElections))
-            .perform(click())
-
-        onView(allOf(withId(R.id.election_element_title), isDescendantOfA(
-            nthChildOf(withId(R.id.upcoming_element_rview), 0))))
-            .check(matches(withText("hideki")))
-            .check(matches(isDisplayed()))
-    }
+//    @Test
+//    fun upcomingElectionCheck(){
+//        onView(withId(R.id.buttonUpcomingElections))
+//            .perform(click())
+//
+//        onView(allOf(withId(R.id.election_element_title), isDescendantOfA(
+//            nthChildOf(withId(R.id.upcoming_element_rview), 0))))
+//            .check(matches(withText("hideki")))
+//            .check(matches(isDisplayed()))
+//    }
 
 }
 
