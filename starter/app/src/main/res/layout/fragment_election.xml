@@ -5,6 +5,7 @@
 
     <!-- Add node to connect Election ViewModel -->
     <data>
+
         <variable
             name="viewModel"
             type="com.example.android.politicalpreparedness.election.ElectionsViewModel" />
@@ -19,42 +20,38 @@
 
         <!-- Add Upcoming Election Recycler and Header -->
 
-        <LinearLayout
-            android:id="@+id/upcoming_elections_layout"
+        <TextView
+            android:id="@+id/textView"
+            style="@style/UpcomingElectionHeader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="@dimen/medium_space"
+            android:text="@string/upcoming_elections"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/upcoming_element_rview"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:orientation="vertical"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toTopOf="@id/guideline"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toBottomOf="@id/textView"
+            app:listData="@{viewModel.upcomingElections}"
+            tools:layout_editor_absoluteX="8dp"
+            tools:layout_editor_absoluteY="8dp" />
 
-            <TextView
-                android:id="@+id/textView"
-                style="@style/UpcomingElectionHeader"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingBottom="@dimen/medium_space"
-                android:text="@string/upcoming_elections" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/upcoming_element_rview"
-                app:listData="@{viewModel.upcomingElections}"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                />
-        </LinearLayout>
         <ProgressBar
             android:id="@+id/status_loading_wheel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:indeterminate="true"
-            app:setStatusProgressBar="@{viewModel.isLoadingDB}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:setStatusProgressBar="@{viewModel.isLoadingDB}" />
 
 
         <androidx.constraintlayout.widget.Guideline
@@ -65,32 +62,25 @@
             app:layout_constraintGuide_percent="0.50" />
 
         <!-- Add Saved Election Recycler and Header -->
-        <LinearLayout
-            android:id="@+id/saved_elections_layout"
+        <TextView
+            android:id="@+id/textView2"
+            style="@style/UpcomingElectionHeader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="@dimen/medium_space"
+            android:text="@string/saved_elections"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/guideline" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/saved_element_rview"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:orientation="vertical"
-            android:paddingTop="@dimen/medium_space"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/guideline">
+            app:layout_constraintTop_toBottomOf="@id/textView2"
+            app:listData="@{viewModel.savedElections}" />
 
-            <TextView
-                android:id="@+id/textView2"
-                style="@style/UpcomingElectionHeader"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingBottom="@dimen/medium_space"
-                android:text="@string/saved_elections" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/saved_element_rview"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:listData="@{viewModel.savedElections}"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                />
-        </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
